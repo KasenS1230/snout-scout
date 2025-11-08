@@ -1,45 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Snout Scout - Find Missing Dogs</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snout Scout</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f6f8fa;
-      text-align: center;
-      padding: 50px;
+      font-family: "Poppins", sans-serif;
     }
 
-    h1 {
-      color: #2c3e50;
-      font-size: 2.5em;
-    }
+    /* Background image styling */
+   .homepage {
+  background-image: url('homepage.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  position: relative; /* needed for absolute positioning of children */
+}
 
-    button {
-      background-color: #ff66e4;
-      color: white;
-      border: none;
-      padding: 14px 28px;
-      margin: 20px;
-      border-radius: 10px;
-      font-size: 18px;
+/* Button container with absolute positioning */
+.button-container {
+  position: absolute; 
+  left: 130px; /* horizontal distance from left of page */
+  top: 660px;  /* vertical distance from top of page */
+  display: flex;
+  gap: 50px;
+}
+
+    /* Button style */
+    .button-container button {
+      background-color: white;
+      border: 3px solid #66bb6a;
+      border-radius: 50px;
+      font-size: 22px;
+      font-weight: bold;
+      padding: 14px 45px;
       cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     }
 
-    button:hover {
-      background-color: #ff66e4;
+    .button-container button:hover {
+      background-color: #a5d6a7;
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 768px) {
+      .button-container {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .button-container button {
+        width: 200px;
+        font-size: 18px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>Snout Scout</h1>
-  <p>Help reunite lost dogs with their families!</p>
-
-  <button onclick="location.href='reportform.html'">Report a Missing Dog</button>
-  <button onclick="location.href='foundform.html'">Report a Found Dog</button>
+  <div class="homepage">
+    <div class="button-container">
+      <button onclick="window.location.href='reportform.html'">Lost</button>
+      <button onclick="window.location.href='foundform.html'">Found</button>
+    </div>
+  </div>
 
 </body>
 </html>

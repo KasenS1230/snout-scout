@@ -7,7 +7,7 @@ const app = express();
 const PORT = 5500;
 
 // Firebase Admin SDK
-const serviceAccount = require('./snout-scout-cb03d-firebase-adminsdk-fbsvc-7da418bf5e.json');
+const serviceAccount = require('./key.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -22,11 +22,11 @@ app.use(express.json());
 // Endpoint for flyer submission
 app.post('/foundform', async (req, res) => {
   try {
-    const { ownerName, dogName, dogBreed, dogColor, lastPlace, email, phoNum } = req.body;
+    const { bystandName, dogName, dogBreed, dogColor, lastPlace, email, phoNum } = req.body;
 
     // Add flyer to Firestore
     const docRef = await db.collection('flyers').add({
-      ownerName,
+      bystandName,
       dogName,
       dogBreed,
       dogColor,
@@ -36,7 +36,7 @@ app.post('/foundform', async (req, res) => {
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
-    console.log('New flyer submitted:', { ownerName, dogName });
+    console.log('New flyer submitted:', { bystandName, dogName });
     res.json({ message: 'Flyer submitted successfully!', id: docRef.id });
   } catch (err) {
     console.error('Error submitting flyer:', err);

@@ -43,7 +43,7 @@
             <div class="row g-0"> <div class="col-md-6 p-4 p-md-5">
                 <h2 class="h3 fw-bold mb-3">Report a Found Dog</h2>
                 
-                <form>
+                <form id="flyerForm">
                   
                   <div class="mb-3">
                     <label for="bystandName" class="form-label">Your Name:</label>
@@ -119,5 +119,38 @@
               
             </div> </div> </div>
       </div>
-    </div> </body>
+    </div> 
+    <script>
+  console.log("DEBUG");
+const flyerForm = document.getElementById('flyerForm');
+const status = document.getElementById('status');
+
+flyerForm.addEventListener('submit', async (e) => {
+    // Stop the form from submitting and causing a page reload
+    e.preventDefault(); 
+
+    await fetch("http://localhost:5500/foundform", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        bystandName: document.querySelector("#bystandName").value,
+        dogName: document.querySelector("#dogName").value,
+        dogBreed: document.querySelector("#dogBreed").value,
+        dogColor: document.querySelector("#dogColor").value,
+        lastPlace: document.querySelector("#lastPlace").value,
+        email: document.querySelector("#email").value,
+        phoNum: document.querySelector("#phoNum").value
+      })
+    })
+
+    // **[Additional logic to fetch and submit data would go here]**
+
+    console.log("Form submission attempted.");
+
+    // Properly close the anonymous function and the addEventListener call
+}); // <-- Missing closing brace and parenthesis 
+</script>
+  </body>
 </html>

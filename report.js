@@ -7,7 +7,7 @@ const app = express();
 const PORT = 5500;
 
 // Firebase Admin SDK
-const serviceAccount = require('./firebase-key.json');
+const serviceAccount = require('./snout-scout-cb03d-firebase-adminsdk-fbsvc-7da418bf5e.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -20,7 +20,7 @@ app.use(cors());
 app.use(express.json());
 
 // Endpoint for flyer submission
-app.post('/submit-flyer', async (req, res) => {
+app.post('/foundform', async (req, res) => {
   try {
     const { ownerName, dogName, dogBreed, dogColor, lastPlace, email, phoNum } = req.body;
 

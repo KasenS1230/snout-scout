@@ -56,13 +56,34 @@
                   </div>
                   
                   <div class="mb-3">
-                    <label for="dogBreed" class="form-label">Breed:</label>
+                    <label for="dogBreed" class="form-label">Breed(Optional):</label>
                     <input type="text" class="form-control" id="dogBreed">
                   </div>
 
                   <div class="mb-3">
-                    <label for="dogColor" class="form-label">Color:</label>
+                    <label for="dogColor" class="form-label">Color(Optional):</label>
                     <input type="text" class="form-control" id="dogColor">
+                  </div>
+                  
+                  <div class="mb-3">
+                  <label for="dogSize" class="form-label">Size:</label>
+                  <select class="form-select" id="dogSize">
+                    <option selected>Please select one...</option>
+                    <option value="option1">XS (Example: Chihuahua)</option>
+                    <option value="option2">Small (Example: French Bulldog) </option>
+                    <option value="option3">Medium (Example: Beagle) </option>
+                    <option value ="option4">Large (Example: Golden Retriever)</option>
+                    <option value ="option5">XL (Example: Great Dane)</option>
+                  </select>
+                </div>
+                  <div class="mb-3">
+                    <label for="cityName" class="form-label">City:</label>
+                    <input type="text" class="form-control" id="cityName">
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="metroArea" class="form-label">Metro Location:</label>
+                    <input type="text" class="form-control" id="metroArea">
                   </div>
                   
                   <div class="mb-3">
@@ -83,6 +104,12 @@
                     <input type="file" class="form-control" id="dogPic" accept="image/*">
                   </div>
 
+                  <div class="mb-3">
+                    <label for="comments" class="form-label">Additional Comments:</label>
+                    <textarea class="form-control" id="comments" rows="3"></textarea>
+                  </div>
+
+
                   <div class="d-grid pt-3">
                     <button type="submit" class="btn btn-lg btn-brand-pink">Submit Report</button>
                   </div>
@@ -98,6 +125,8 @@
                      alt="A happy dog" 
                      style="width: 100%; height: 100%; object-fit: contain;">
               </div>
+
+              
               
             </div> </div> </div>
       </div>

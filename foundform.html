@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report Found Dog - Snout Scout</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f6f8fa;
+      padding: 40px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h2 {
+      color: #2c3e50;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .back {
+      background-color: #7f8c8d;
+      margin-top: 10px;
+    }
+
+    .back:hover {
+      background-color: #636e72;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Report a Found Dog</h2>
+
+  <form>
+    <label for="bystandName">Your Name:</label>
+    <input type="text" id="bystandName" required>
+
+    <label for="dogName">Dog’s Name (if known):</label>
+    <input type="text" id="dogName">
+
+    <label for="dogBreed">Breed:</label>
+    <input type="text" id="dogBreed">
+
+    <label for="dogColor">Color:</label>
+    <input type="text" id="dogColor">
+
+    <label for="lastPlace">Last Seen Location:</label>
+    <input type="text" id="lastPlace">
+
+    <label for="email">Your Email:</label>
+    <input type="text" id="email">
+
+    <label for="phoNum">Your Phone Number:</label>
+    <input type="text" id="phoNum">
+
+    <label for="dogPic">Upload an Photo:</label>
+    <input type="file" id="dogPic" accept="image/*">
+
+    <button type="submit">Submit Report</button>
+  </form>
+
+  <button class="back" onclick="location.href='index.html'">← Back to Home</button>
+
+<script>
+    const flyerForm = document.getElementById('flyerForm');
+    const status = document.getElementById('status');
+
+    flyerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        ownerName: document.getElementById('bystandName').value,
+        dogName: document.getElementById('dogName').value,
+        dogBreed: document.getElementById('dogBreed').value,
+        dogColor: document.getElementById('dogColor').value,
+        lastPlace: document.getElementById('lastPlace').value,
+        email: document.getElementById('email').value,
+        phoNum: document.getElementById('phoNum').value
+      };
+
+      try {
+        const response = await fetch('http://127.0.0.1:5500/foundform.html', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        status.textContent = result.message + (result.id ? ` (ID: ${result.id})` : '');
+        flyerForm.reset();
+      } catch (err) {
+        console.error(err);
+        status.textContent = '❌ Failed to submit flyer.';
+      }
+    });
+  </script>
+
+</body>
+</html>

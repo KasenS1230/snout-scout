@@ -1,35 +1,31 @@
-import { db, storage } from "./firebase.js";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+// report.js
+const express = require('express');
+const cors = require('cors');
+const admin = require('firebase-admin');
 
-const flyerForm = document.getElementById("flyerForm");
-const status = document.getElementById("status");
+const app = express();
+const PORT = 5500;
 
-flyerForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+// Firebase Admin SDK
+const serviceAccount = require('./firebase-key.json');
 
-  const ownerName = document.getElementById("ownerName").value;
-  const dogName = document.getElementById("dogName").value;
-  const dogBreed = document.getElementById("dogBreed").value;
-  const dogColor = document.getElementById("dogColor").value;
-  const lastPlace = document.getElementById("lastPlace").value;
-  const email = document.getElementById("email").value;
-  const phoNum = document.getElementById("phoNum").value;
-  const dogPic = document.getElementById("dogPic").files[0];
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 
-  if (!file) {
-    status.textContent = "Please select a pet image.";
-    return;
-  }
+const db = admin.firestore();
 
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Endpoint for flyer submission
+app.post('/submit-flyer', async (req, res) => {
   try {
-    // 1️⃣ Upload flyer to Firebase Storage
-    const fileRef = ref(storage, `flyers/${file.name}-${Date.now()}`);
-    await uploadBytes(fileRef, file);
-    const flyerURL = await getDownloadURL(fileRef);
+    const { ownerName, dogName, dogBreed, dogColor, lastPlace, email, phoNum } = req.body;
 
-    // 2️⃣ Add info to Firestore
-    await addDoc(collection(flyerdb, "flyers"), {
+    // Add flyer to Firestore
+    const docRef = await db.collection('flyers').add({
       ownerName,
       dogName,
       dogBreed,
@@ -37,14 +33,15 @@ flyerForm.addEventListener("submit", async (e) => {
       lastPlace,
       email,
       phoNum,
-      flyerURL,
-      createdAt: serverTimestamp(),
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
-    status.textContent = "✅ Flyer submitted successfully!";
-    flyerForm.reset();
-  } catch (error) {
-    console.error("Error uploading flyer:", error);
-    status.textContent = "❌ Failed to submit flyer. Try again.";
+    console.log('New flyer submitted:', { ownerName, dogName });
+    res.json({ message: 'Flyer submitted successfully!', id: docRef.id });
+  } catch (err) {
+    console.error('Error submitting flyer:', err);
+    res.status(500).json({ message: 'Failed to submit flyer.' });
   }
 });
+
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

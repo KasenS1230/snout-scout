@@ -17,22 +17,22 @@
 
     /* Background image styling */
    .homepage {
-  background-image: url('homepage.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 100vh;
-  position: relative; /* needed for absolute positioning of children */
-}
+      background-image: url('homepage.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: 100vh;
+      position: relative; /* needed for absolute positioning of children */
+    }
 
-/* Button container with absolute positioning */
-.button-container {
-  position: absolute; 
-  left: 130px; /* horizontal distance from left of page */
-  top: 660px;  /* vertical distance from top of page */
-  display: flex;
-  gap: 50px;
-}
+    /* Button container with absolute positioning */
+    .button-container {
+      position: absolute; 
+      left: 130px; /*from left*/
+      top: 660px;  /*from top*/
+      display: flex;
+      gap: 50px;
+    }
 
     /* Button style */
     .button-container button {
@@ -52,7 +52,46 @@
       transform: scale(1.05);
     }
 
+    .topright-buttons{
+       display: flex;
+      justify-content: flex-end;
+      gap: 25px;
+      padding: 30px 60px; 
+    }
+
+    .topright-buttons button{
+      background-color: transparent;
+      color: rgb(0, 0, 0);
+      border: 2px solid rgb(0, 0, 0);
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 600;
+      padding: 10px 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .topright-buttons button:hover{
+      background-color: white;
+      color: #000000;
+      transform: translateY(-2px);
+    }
+
     @media (max-width: 768px) {
+      .topright-buttons{
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+        padding: 20px;
+      }
+
+      .topright-buttons button {
+        font-size: 16px;
+        padding: 8px 20px;
+      }
+
+
       .button-container {
         flex-direction: column;
         gap: 20px;
@@ -66,8 +105,12 @@
   </style>
 </head>
 <body>
-
   <div class="homepage">
+    <div class = "topright-buttons">
+      <button onclick="window.location.href='flyers.html'">Flyers</button>
+      <button onclick="window.location.href='media.html'">Media</button>
+      <button onclick="window.location.href='about.html'">About</button>
+    </div>
     <div class="button-container">
       <button onclick="window.location.href='reportform.html'">Lost</button>
       <button onclick="window.location.href='foundform.html'">Found</button>

@@ -65,17 +65,18 @@
 
     /* Main */
     .section {
-      display: none;
+      /* --- FIX APPLIED HERE --- */
+      display: none; /* Hide all sections by default */
       padding: 40px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr); /* exactly 3 cards per row */
+      grid-template-columns: repeat(3, 1fr); /* Keep grid properties */
       gap: 30px;
       justify-items: center;
     }
 
     .section.active {
-      display: grid;
+      display: grid; /* Only show the active section as a grid */
     }
+    /* ------------------------ */
 
     /* Dog Cards */
     .dog-card {
@@ -131,17 +132,14 @@
 </head>
 <body>
   <header>
-    <!-- Missing and Sighting Button Placement -->
     <div class="center-buttons">
       <button id="missingBtn" class="active">Missing</button>
       <button id="sightingsBtn">Sightings</button>
     </div>
 
-    <!-- Back to Home Placement -->
     <a href="index.html"><button class="home-btn">Back to Home</button></a>
   </header>
 
-  <!-- Missing Section -->
   <section id="missingSection" class="section active">
     <div class="dog-card">
       <img src="dog1.jpg" alt="Dog 1">
@@ -168,7 +166,6 @@
     </div>
   </section>
 
-  <!-- Sightings Section -->
   <section id="sightingsSection" class="section">
     <div class="dog-card">
       <img src="dog4.jpg" alt="Dog 4">

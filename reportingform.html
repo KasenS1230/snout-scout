@@ -42,9 +42,8 @@
           <div class="card shadow-sm border-0" style="overflow: hidden; border-radius: 1rem;">
             <div class="row g-0"> <div class="col-md-6 p-4 p-md-5">
                 <h2 class="h3 fw-bold mb-3">Lost a Pup?</h2>
-                
-                <form id="reportForm">
-                  
+
+                <form id="reportForm" onsubmit="window.location.href='postform.html'; return false;"onkeydown="return event.key != 'Enter';">
                   <div class="mb-3">
                     <label for="ownerName" class="form-label">Your Name:</label>
                     <input type="text" class="form-control" id="ownerName" required>

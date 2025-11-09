@@ -5,70 +5,122 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Snout Scout</title>
   <style>
+    /* 1. IMPORT YOUR FONT */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
     body {
       font-family: "Poppins", sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f9f9f9;
+      background-color: #f8f9fa; /* Slightly softer gray */
     }
 
     /* ===== HEADER ===== */
     header {
       position: sticky;
       top: 0;
-      background-color: #aefeb2; /* you can switch this to pink/green combo */
-      padding: 15px 30px;
+      background-color: #ffffff; /* Cleaner white background */
+      padding: 10px 30px;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between; /* This cleanly separates logo, tabs, and home */
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Lifts header off the page */
     }
 
-    /* Center container for tabs */
+    /* 2. ADDED LOGO CONTAINER */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-container img {
+      height: 40px; /* Adjust as needed */
+    }
+    .logo-container span {
+      font-size: 20px;
+      font-weight: 700;
+      color: #333;
+    }
+
     .center-buttons {
       display: flex;
       gap: 20px;
     }
 
     header button {
-      background-color: white;
-      border: 2px solid #4caf50;
+      background-color: transparent;
+      border: 2px solid #ddd;
       border-radius: 20px;
       padding: 10px 20px;
       cursor: pointer;
       font-size: 16px;
+      font-weight: 600;
       transition: all 0.3s ease;
     }
 
-    header button.active {
+    /* 3. BRANDED BUTTONS */
+    #missingBtn {
+      border-color: #ff66c4 ;
+      color: #ff66c4 ;
+    }
+    #missingBtn.active {
+      background-color: #ff66c4 ;
+      color: white;
+    }
+    
+    #sightingsBtn {
+      border-color: #4caf50;
+      color: #4caf50;
+    }
+    #sightingsBtn.active {
       background-color: #4caf50;
       color: white;
     }
 
-    /* Home Button Position*/
     .home-btn {
-      position: absolute;
-      right: 30px;
-      top: 15px;
-      background-color: #ffb6c1;
+      background-color: #6c757d; /* Neutral gray */
       color: white;
       border: none;
       border-radius: 20px;
       padding: 10px 20px;
       font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
     }
-
     .home-btn:hover {
-      background-color: #ff8da1;
+      background-color: #5a6268;
+    }
+
+    /* 4. NEW SEARCH/FILTER BAR */
+    .search-container {
+      padding: 20px 40px;
+      background-color: #f1f1f1;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+    }
+    .search-container input {
+      flex-grow: 1;
+      padding: 12px 15px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .search-container select {
+      padding: 12px 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
     }
 
     /* Main */
     .section {
       display: none;
       padding: 40px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr); /* exactly 3 cards per row */
+      grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
       gap: 30px;
       justify-items: center;
     }
@@ -76,42 +128,93 @@
     .section.active {
       display: grid;
     }
+    
+    /* Added style for loading/empty message */
+    .section .message {
+        grid-column: 1 / -1; /* Make message span all columns */
+        font-size: 18px;
+        color: #777;
+    }
 
-    /* Dog Cards */
+    /* 5. ENHANCED DOG CARDS */
     .dog-card {
       width: 100%;
       max-width: 350px;
       background-color: white;
       border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      transition: transform 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      /* Added to fix card height issues */
+      display: flex;
+      flex-direction: column;
     }
 
     .dog-card:hover {
       transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
     }
 
     .dog-card img {
       width: 100%;
-      aspect-ratio: 1 / 1; /* makes image perfectly square */
+      aspect-ratio: 1 / 1;
       object-fit: cover;
+      /* Add border-radius to top corners */
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
     }
 
     .dog-card .info {
-      padding: 15px;
-      text-align: center;
+      padding: 20px;
+      text-align: left;
+      /* Added to make info block fill space */
+      flex-grow: 1; 
+      display: flex;
+      flex-direction: column;
     }
 
     .dog-card h3 {
-      margin: 10px 0 5px;
-      font-size: 18px;
+      margin: 0 0 5px;
+      font-size: 20px;
       color: #333;
     }
 
+    
     .dog-card p {
       font-size: 14px;
       color: #555;
+      margin: 4px 0;
+    }
+    .dog-card p strong {
+      color: #333;
+    }
+
+    
+    .card-btn {
+      display: block;
+      width: 100%;
+      background-color: #ff66c4 ;
+      color: white;
+      text-align: center;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      /* Pushes button to bottom */
+      margin-top: auto; 
+      padding-top: 15px;
+    }
+    .card-btn:hover {
+      background-color: #be4a91;
+    }
+    /* Green button for sightings */
+    #sightingsSection .card-btn {
+      background-color: #4caf50;
+    }
+    #sightingsSection .card-btn:hover {
+      background-color: #43a047;
     }
 
     /* ===== RESPONSIVE DESIGN ===== */
@@ -120,99 +223,212 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
-
+    @media (max-width: 768px) {
+      .logo-container span {
+        display: none;
+      }
+      .search-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
     @media (max-width: 600px) {
       .section {
         grid-template-columns: 1fr;
+        padding: 20px;
+      }
+      header {
+        padding: 10px 15px;
       }
     }
-
   </style>
 </head>
 <body>
+
   <header>
-    <!-- Missing and Sighting Button Placement -->
+    <a href="index.html" class="logo-container" style="text-decoration: none;">
+      <img src="Logo.png" alt="Snout Scout Logo"> <span></span>
+    </a>
+
     <div class="center-buttons">
       <button id="missingBtn" class="active">Missing</button>
       <button id="sightingsBtn">Sightings</button>
     </div>
 
-    <!-- Back to Home Placement -->
-    <a href="index.html"><button class="home-btn">Back to Home</button></a>
+    <a href="index.html"><button class="home-btn">Home</button></a>
   </header>
 
-  <!-- Missing Section -->
+  <div class="search-container">
+    <input type="text" placeholder="Search by name, breed, or color...">
+    <select>
+      <option value="">All Locations</option>
+      <option value="baton-rouge">Baton Rouge</option>
+      <option value="denham-springs">Denham Springs</option>
+      <option value="prairieville">Prairieville</option>
+      <option value="gonzales">Gonzales</option>
+      <option value="zachary">Zachary</option>
+    </select>
+  </div>
+
   <section id="missingSection" class="section active">
     <div class="dog-card">
-      <img src="dog1.jpg" alt="Dog 1">
+      <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGRvZ3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=600" alt="Dog 1">
       <div class="info">
-        <h3>Buddy</h3>
-        <p>Last seen near LSU campus</p>
-      </div>
-    </div>
-
-    <div class="dog-card">
-      <img src="dog2.jpg" alt="Dog 2">
-      <div class="info">
-        <h3>Luna</h3>
-        <p>Golden retriever, 3 years old</p>
-      </div>
-    </div>
-
-    <div class="dog-card">
-      <img src="dog3.jpg" alt="Dog 3">
-      <div class="info">
-        <h3>Max</h3>
-        <p>Small brown beagle, collar with name tag</p>
+        <h3>Loading...</h3>
+        <p><strong>Breed:</strong></p>
+        <p><strong>Size:</strong></p>
+        <p><strong>Location:</strong></p>
+        <button class="card-btn">View Details</button>
       </div>
     </div>
   </section>
 
-  <!-- Sightings Section -->
   <section id="sightingsSection" class="section">
     <div class="dog-card">
-      <img src="dog4.jpg" alt="Dog 4">
+      <img src="https://images.unsplash.com/photo-1511732782465-412b656f2291?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Ym9yZGVyJTIwY29sbGllfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=600" alt="Dog 4">
       <div class="info">
-        <h3>Bella</h3>
-        <p>Found near City Park, friendly and calm</p>
-      </div>
-    </div>
-
-    <div class="dog-card">
-      <img src="dog5.jpg" alt="Dog 5">
-      <div class="info">
-        <h3>Charlie</h3>
-        <p>Seen running near downtown Baton Rouge</p>
-      </div>
-    </div>
-
-    <div class="dog-card">
-      <img src="dog6.jpg" alt="Dog 6">
-      <div class="info">
-        <h3>Rocky</h3>
-        <p>Temporarily housed at local shelter</p>
+        <h3>Loading...</h3>
+        <p><strong>Breed:</strong></p>
+        <p><strong>Size:</strong></p>
+        <p><strong>Location:</strong></p>
+        <button class="card-btn">This is my Dog!</button>
       </div>
     </div>
   </section>
 
   <script>
-    const missingBtn = document.getElementById("missingBtn");
-    const sightingsBtn = document.getElementById("sightingsBtn");
-    const missingSection = document.getElementById("missingSection");
-    const sightingsSection = document.getElementById("sightingsSection");
+    // Wait for the DOM to be fully loaded before running script
+    document.addEventListener("DOMContentLoaded", () => {
 
-    missingBtn.addEventListener("click", () => {
-      missingSection.classList.add("active");
-      sightingsSection.classList.remove("active");
-      missingBtn.classList.add("active");
-      sightingsBtn.classList.remove("active");
-    });
+      // ===== 1. GET ALL THE ELEMENTS WE NEED =====
+      const missingBtn = document.getElementById("missingBtn");
+      const sightingsBtn = document.getElementById("sightingsBtn");
+      const missingSection = document.getElementById("missingSection");
+      const sightingsSection = document.getElementById("sightingsSection");
+      
+      // Your server URL
+      const API_URL = "http://localhost:5500";
+      
+      // A fallback image in case one isn't provided
+      const PLACEHOLDER_IMAGE = "https://via.placeholder.com/350x350.png?text=No+Image+Provided";
 
-    sightingsBtn.addEventListener("click", () => {
-      sightingsSection.classList.add("active");
-      missingSection.classList.remove("active");
-      sightingsBtn.classList.add("active");
-      missingBtn.classList.remove("active");
+      // ===== 2. YOUR EXISTING BUTTON TOGGLE LOGIC =====
+      missingBtn.addEventListener("click", () => {
+        missingSection.classList.add("active");
+        sightingsSection.classList.remove("active");
+        missingBtn.classList.add("active");
+        sightingsBtn.classList.remove("active");
+      });
+
+      sightingsBtn.addEventListener("click", () => {
+        sightingsSection.classList.add("active");
+        missingSection.classList.remove("active");
+        sightingsBtn.classList.add("active");
+        missingBtn.classList.remove("active");
+      });
+
+      // ===== 3. NEW: FUNCTION TO LOAD MISSING DOGS (REPORTS) =====
+      async function loadMissingDogs() {
+        // Clear the static example cards
+        missingSection.innerHTML = '<p class="message">Loading missing reports...</p>';
+        
+        try {
+          const response = await fetch(`${API_URL}/reports`);
+          if (!response.ok) throw new Error('Network response was not ok');
+          const reports = await response.json();
+
+          // Clear the "loading" message
+          missingSection.innerHTML = '';
+
+          if (reports.length === 0) {
+            missingSection.innerHTML = '<p class="message">No missing reports found.</p>';
+            return;
+          }
+
+          // Loop through each report and create a card
+          reports.forEach(report => {
+            const card = document.createElement('div');
+            card.className = 'dog-card';
+            
+            // Format the date
+            let date = 'Date not available';
+            if (report.createdAt && report.createdAt._seconds) {
+                date = new Date(report.createdAt._seconds * 1000).toLocaleDateString();
+            }
+
+            card.innerHTML = `
+              <img src="${report.dogPic || PLACEHOLDER_IMAGE}" alt="${report.dogName}">
+              <div class="info">
+                <h3>${report.dogName || 'Name not provided'}</h3>
+                <p><strong>Breed:</strong> ${report.dogBreed || 'Unknown'}</p>
+                <p><strong>Size:</strong> ${report.dogSize || 'Unknown'}</p>
+                <p><strong>Location:</strong> ${report.lastPlace || 'Unknown'}</p>
+                <p><strong>Reported:</strong> ${date}</p>
+                <button class="card-btn">View Details</button>
+              </div>
+            `;
+            missingSection.appendChild(card);
+          });
+
+        } catch (error) {
+          console.error('Error fetching missing reports:', error);
+          missingSection.innerHTML = '<p class="message">Error loading reports. Please try again later.</p>';
+        }
+      }
+
+      // ===== 4. NEW: FUNCTION TO LOAD FOUND DOGS (FLYERS) =====
+      async function loadFoundDogs() {
+        // Clear the static example cards
+        sightingsSection.innerHTML = '<p class="message">Loading sightings...</p>';
+        
+        try {
+          const response = await fetch(`${API_URL}/flyers`);
+          if (!response.ok) throw new Error('Network response was not ok');
+          const flyers = await response.json();
+
+          // Clear the "loading" message
+          sightingsSection.innerHTML = '';
+
+          if (flyers.length === 0) {
+            sightingsSection.innerHTML = '<p class="message">No sightings found.</p>';
+            return;
+          }
+
+          // Loop through each flyer and create a card
+          flyers.forEach(flyer => {
+            const card = document.createElement('div');
+            card.className = 'dog-card';
+            
+            // Format the date
+            let date = 'Date not available';
+            if (flyer.createdAt && flyer.createdAt._seconds) {
+                date = new Date(flyer.createdAt._seconds * 1000).toLocaleDateString();
+            }
+            
+            card.innerHTML = `
+              <img src="${flyer.dogPic || PLACEHOLDER_IMAGE}" alt="${flyer.dogName}">
+              <div class="info">
+                <h3>${flyer.dogName || 'Found Dog'}</h3>
+                <p><strong>Breed:</strong> ${flyer.dogBreed || 'Unknown'}</p>
+                <p><strong>Size:</strong> ${flyer.dogSize || 'Unknown'}</p>
+                <p><strong>Location:</strong> ${flyer.lastPlace || 'Unknown'}</p>
+                <p><strong>Spotted:</strong> ${date}</p>
+                <button class="card-btn">This is my Dog!</button>
+              </div>
+            `;
+            sightingsSection.appendChild(card);
+          });
+
+        } catch (error) {
+          console.error('Error fetching sightings:', error);
+          sightingsSection.innerHTML = '<p class="message">Error loading sightings. Please try again later.</p>';
+        }
+      }
+
+      // ===== 5. NEW: LOAD ALL DATA WHEN THE PAGE LOADS =====
+      loadMissingDogs();
+      loadFoundDogs();
+
     });
   </script>
 </body>

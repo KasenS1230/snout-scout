@@ -109,14 +109,18 @@ app.get('/test-email', async (req, res) => {
     
   
     const senderEmail = 'carverdewsford@gmail.com';
+
     const recipientEmail = 'carverdewsford@gmail.com';
-    
+    //^We will want this to NOT be me, but rather be the information of the one who lost the dog.
+
+
     const msg = {
       to: recipientEmail,
       from: senderEmail,
       subject: 'Snout Scout - Test Email Alert!',
       text: 'HURRAAAY PLEAAAASE',
       html: '<strong> If you are reading this, jump up and cry</strong>'
+      //This is all testing junk!^ We want this to encourage the user to check out a high match.
     };
 
     

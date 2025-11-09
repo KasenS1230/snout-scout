@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .aboutpage {
+      background-image: url('aboutpage.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: 100vh;
+      position: relative;
+    }
+
+    .back {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: #aefeb2;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .back:hover {
+      background-color: #8fe99c;
+    }
+  </style>
+</head>
+<body>
+  <div class="aboutpage">
+    <button class="back" onclick="location.href='index.html'">← Back to Home</button>
+  </div>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snout Scout</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      position: sticky;
+      top: 0;
+      background-color: #aefeb2; /* you can switch this to pink/green combo */
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Center container for tabs */
+    .center-buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    header button {
+      background-color: white;
+      border: 2px solid #4caf50;
+      border-radius: 20px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    header button.active {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    /* Home Button Position*/
+    .home-btn {
+      position: absolute;
+      right: 30px;
+      top: 15px;
+      background-color: #ffb6c1;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .home-btn:hover {
+      background-color: #ff8da1;
+    }
+
+    /* Main */
+    .section {
+      display: none;
+      padding: 40px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* exactly 3 cards per row */
+      gap: 30px;
+      justify-items: center;
+    }
+
+    .section.active {
+      display: grid;
+    }
+
+    /* Dog Cards */
+    .dog-card {
+      width: 100%;
+      max-width: 350px;
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+
+    .dog-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .dog-card img {
+      width: 100%;
+      aspect-ratio: 1 / 1; /* makes image perfectly square */
+      object-fit: cover;
+    }
+
+    .dog-card .info {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .dog-card h3 {
+      margin: 10px 0 5px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .dog-card p {
+      font-size: 14px;
+      color: #555;
+    }
+
+    /* ===== RESPONSIVE DESIGN ===== */
+    @media (max-width: 900px) {
+      .section {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .section {
+        grid-template-columns: 1fr;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <!-- Missing and Sighting Button Placement -->
+    <div class="center-buttons">
+      <button id="missingBtn" class="active">Missing</button>
+      <button id="sightingsBtn">Sightings</button>
+    </div>
+
+    <!-- Back to Home Placement -->
+    <a href="index.html"><button class="home-btn">Back to Home</button></a>
+  </header>
+
+  <!-- Missing Section -->
+  <section id="missingSection" class="section active">
+    <div class="dog-card">
+      <img src="dog1.jpg" alt="Dog 1">
+      <div class="info">
+        <h3>Buddy</h3>
+        <p>Last seen near LSU campus</p>
+      </div>
+    </div>
+
+    <div class="dog-card">
+      <img src="dog2.jpg" alt="Dog 2">
+      <div class="info">
+        <h3>Luna</h3>
+        <p>Golden retriever, 3 years old</p>
+      </div>
+    </div>
+
+    <div class="dog-card">
+      <img src="dog3.jpg" alt="Dog 3">
+      <div class="info">
+        <h3>Max</h3>
+        <p>Small brown beagle, collar with name tag</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sightings Section -->
+  <section id="sightingsSection" class="section">
+    <div class="dog-card">
+      <img src="dog4.jpg" alt="Dog 4">
+      <div class="info">
+        <h3>Bella</h3>
+        <p>Found near City Park, friendly and calm</p>
+      </div>
+    </div>
+
+    <div class="dog-card">
+      <img src="dog5.jpg" alt="Dog 5">
+      <div class="info">
+        <h3>Charlie</h3>
+        <p>Seen running near downtown Baton Rouge</p>
+      </div>
+    </div>
+
+    <div class="dog-card">
+      <img src="dog6.jpg" alt="Dog 6">
+      <div class="info">
+        <h3>Rocky</h3>
+        <p>Temporarily housed at local shelter</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const missingBtn = document.getElementById("missingBtn");
+    const sightingsBtn = document.getElementById("sightingsBtn");
+    const missingSection = document.getElementById("missingSection");
+    const sightingsSection = document.getElementById("sightingsSection");
+
+    missingBtn.addEventListener("click", () => {
+      missingSection.classList.add("active");
+      sightingsSection.classList.remove("active");
+      missingBtn.classList.add("active");
+      sightingsBtn.classList.remove("active");
+    });
+
+    sightingsBtn.addEventListener("click", () => {
+      sightingsSection.classList.add("active");
+      missingSection.classList.remove("active");
+      sightingsBtn.classList.add("active");
+      missingBtn.classList.remove("active");
+    });
+  </script>
+</body>
+</html>

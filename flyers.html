@@ -5,70 +5,122 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Snout Scout</title>
   <style>
+    /* 1. IMPORT YOUR FONT */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
     body {
       font-family: "Poppins", sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f9f9f9;
+      background-color: #f8f9fa; /* Slightly softer gray */
     }
 
     /* ===== HEADER ===== */
     header {
       position: sticky;
       top: 0;
-      background-color: #aefeb2; /* you can switch this to pink/green combo */
-      padding: 15px 30px;
+      background-color: #ffffff; /* Cleaner white background */
+      padding: 10px 30px;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between; /* This cleanly separates logo, tabs, and home */
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Lifts header off the page */
     }
 
-    /* Center container for tabs */
+    /* 2. ADDED LOGO CONTAINER */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-container img {
+      height: 40px; /* Adjust as needed */
+    }
+    .logo-container span {
+      font-size: 20px;
+      font-weight: 700;
+      color: #333;
+    }
+
     .center-buttons {
       display: flex;
       gap: 20px;
     }
 
     header button {
-      background-color: white;
-      border: 2px solid #4caf50;
+      background-color: transparent;
+      border: 2px solid #ddd;
       border-radius: 20px;
       padding: 10px 20px;
       cursor: pointer;
       font-size: 16px;
+      font-weight: 600;
       transition: all 0.3s ease;
     }
 
-    header button.active {
+    /* 3. BRANDED BUTTONS */
+    #missingBtn {
+      border-color: #e91e63;
+      color: #e91e63;
+    }
+    #missingBtn.active {
+      background-color: #e91e63;
+      color: white;
+    }
+    
+    #sightingsBtn {
+      border-color: #4caf50;
+      color: #4caf50;
+    }
+    #sightingsBtn.active {
       background-color: #4caf50;
       color: white;
     }
 
-    /* Home Button Position*/
     .home-btn {
-      position: absolute;
-      right: 30px;
-      top: 15px;
-      background-color: #ffb6c1;
+      background-color: #6c757d; /* Neutral gray */
       color: white;
       border: none;
       border-radius: 20px;
       padding: 10px 20px;
       font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
     }
-
     .home-btn:hover {
-      background-color: #ff8da1;
+      background-color: #5a6268;
+    }
+
+    /* 4. NEW SEARCH/FILTER BAR */
+    .search-container {
+      padding: 20px 40px;
+      background-color: #f1f1f1;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+    }
+    .search-container input {
+      flex-grow: 1;
+      padding: 12px 15px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .search-container select {
+      padding: 12px 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
     }
 
     /* Main */
     .section {
       display: none;
       padding: 40px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr); /* exactly 3 cards per row */
+      grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
       gap: 30px;
       justify-items: center;
     }
@@ -77,41 +129,74 @@
       display: grid;
     }
 
-    /* Dog Cards */
+    /* 5. ENHANCED DOG CARDS */
     .dog-card {
       width: 100%;
       max-width: 350px;
       background-color: white;
       border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Softer shadow */
       overflow: hidden;
-      transition: transform 0.2s ease;
+      transition: all 0.3s ease;
     }
 
     .dog-card:hover {
       transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
     }
 
     .dog-card img {
       width: 100%;
-      aspect-ratio: 1 / 1; /* makes image perfectly square */
+      aspect-ratio: 1 / 1;
       object-fit: cover;
     }
 
     .dog-card .info {
-      padding: 15px;
-      text-align: center;
+      padding: 20px;
+      text-align: left;
     }
 
     .dog-card h3 {
-      margin: 10px 0 5px;
-      font-size: 18px;
+      margin: 0 0 5px;
+      font-size: 20px;
       color: #333;
     }
 
+    /* New info fields */
     .dog-card p {
       font-size: 14px;
       color: #555;
+      margin: 4px 0;
+    }
+    .dog-card p strong {
+      color: #333;
+    }
+
+    
+    .card-btn {
+      display: block;
+      width: 100%;
+      background-color: #e91e63;
+      color: white;
+      text-align: center;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .card-btn:hover {
+      background-color: #c2185b;
+    }
+    /* Green button for sightings */
+    #sightingsSection .card-btn {
+      background-color: #4caf50;
+    }
+    #sightingsSection .card-btn:hover {
+      background-color: #43a047;
     }
 
     /* ===== RESPONSIVE DESIGN ===== */
@@ -120,82 +205,111 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
-
+    @media (max-width: 768px) {
+      .logo-container span {
+        display: none;
+      }
+      .search-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
     @media (max-width: 600px) {
       .section {
         grid-template-columns: 1fr;
+        padding: 20px;
+      }
+      header {
+        padding: 10px 15px;
       }
     }
-
   </style>
 </head>
 <body>
+
   <header>
-    <!-- Missing and Sighting Button Placement -->
+    <a href="index.html" class="logo-container" style="text-decoration: none;">
+      <img src="Logo.png" alt="Snout Scout Logo"> <span></span>
+    </a>
+
     <div class="center-buttons">
       <button id="missingBtn" class="active">Missing</button>
       <button id="sightingsBtn">Sightings</button>
     </div>
 
-    <!-- Back to Home Placement -->
-    <a href="index.html"><button class="home-btn">Back to Home</button></a>
+    <a href="index.html"><button class="home-btn">Home</button></a>
   </header>
 
-  <!-- Missing Section -->
+  <div class="search-container">
+    <input type="text" placeholder="Search by name, breed, or color...">
+    <select>
+      <option value="">All Locations</option>
+      <option value="baton-rouge">Baton Rouge</option>
+      <option value="denham-springs">Denham Springs</option>
+      <option value="prairieville">Prairieville</option>
+      <option value="gonzales">Gonzales</option>
+      <option value="zachary">Zachary</option>
+    </select>
+  </div>
+
   <section id="missingSection" class="section active">
     <div class="dog-card">
-      <img src="dog1.jpg" alt="Dog 1">
+      <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGRvZ3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=600" alt="Dog 1">
       <div class="info">
         <h3>Buddy</h3>
-        <p>Last seen near LSU campus</p>
+        <p><strong_>Breed:</strong_> Pug</p>
+        <p><strong_>Size:</strong_> Small</p>
+        <p><strong_>Location:</strong_> Last seen in Denham Springs</p>
+        <button class="card-btn">View Details</button>
       </div>
     </div>
-
     <div class="dog-card">
-      <img src="dog2.jpg" alt="Dog 2">
+      <img src="https://images.unsplash.com/photo-1422565096762-bdb997a56a84?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGRvZ3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=600" alt="Dog 2">
       <div class="info">
         <h3>Luna</h3>
-        <p>Golden retriever, 3 years old</p>
+        <p><strong_>Breed:</strong_> Golden Retriever</p>
+        <p><strong_>Size:</strong_> Large</p>
+        <p><strong_>Location:</strong_> Last seen in Baton Rouge</p>
+        <button class="card-btn">View Details</button>
       </div>
     </div>
-
     <div class="dog-card">
-      <img src="dog3.jpg" alt="Dog 3">
+      <img src="https://images.unsplash.com/photo-1670150038863-e65375155890?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8ZG9nJTIwYmVhZ2xlfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=600" alt="Dog 3">
       <div class="info">
         <h3>Max</h3>
-        <p>Small brown beagle, collar with name tag</p>
+        <p><strong_>Breed:</strong_> Beagle</p>
+        <p><strong_>Size:</strong_> Medium</p>
+        <p><strong_>Location:</strong_> Last seen in Lafayette</p>
+        <button class="card-btn">View Details</button>
       </div>
     </div>
   </section>
 
-  <!-- Sightings Section -->
   <section id="sightingsSection" class="section">
     <div class="dog-card">
-      <img src="dog4.jpg" alt="Dog 4">
+      <img src="https://images.unsplash.com/photo-1511732782465-412b656f2291?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Ym9yZGVyJTIwY29sbGllfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=600" alt="Dog 4">
       <div class="info">
-        <h3>Bella</h3>
-        <p>Found near City Park, friendly and calm</p>
+        <h3>Found Dog</h3>
+        <p><strong_>Breed:</strong_> Border Collie</p>
+        <p><strong_>Size:</strong_> Medium</p>
+        <p><strong_>Location:</strong_> Sighting in Hammond</p>
+        <button class="card-btn">This is my Dog!</button>
       </div>
     </div>
-
     <div class="dog-card">
-      <img src="dog5.jpg" alt="Dog 5">
+      <img src="https://images.unsplash.com/photo-1757409976179-7a478784d4eb?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9nJTIwYm94ZXJ8ZW58MHx8MHx8fDA%3E&auto=format&fit=crop&q=60&w=600" alt="Dog 5">
       <div class="info">
-        <h3>Charlie</h3>
-        <p>Seen running near downtown Baton Rouge</p>
-      </div>
-    </div>
-
-    <div class="dog-card">
-      <img src="dog6.jpg" alt="Dog 6">
-      <div class="info">
-        <h3>Rocky</h3>
-        <p>Temporarily housed at local shelter</p>
+        <h3>Found Dog</h3>
+        <p><strong_>Breed:</strong_> Boxer</p>
+        <p><strong_>Size:</strong_> Large</p>
+        <p><strong_>Location:</strong_> Sighting in Kenner</p>
+        <button class="card-btn">This is my Dog!</button>
       </div>
     </div>
   </section>
 
   <script>
+   
     const missingBtn = document.getElementById("missingBtn");
     const sightingsBtn = document.getElementById("sightingsBtn");
     const missingSection = document.getElementById("missingSection");

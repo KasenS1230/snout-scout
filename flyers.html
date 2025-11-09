@@ -5,48 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Snout Scout</title>
   <style>
-    /* 1. IMPORT YOUR FONT */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
     body {
       font-family: "Poppins", sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f8f9fa; /* Slightly softer gray */
+      margin: 0; padding: 0;
+      background-color: #f8f9fa;
     }
 
     /* ===== HEADER ===== */
     header {
       position: sticky;
       top: 0;
-      background-color: #ffffff; /* Cleaner white background */
+      background-color: #ffffff;
       padding: 10px 30px;
       display: flex;
       align-items: center;
-      justify-content: space-between; /* This cleanly separates logo, tabs, and home */
+      justify-content: space-between;
       z-index: 100;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Lifts header off the page */
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
-    /* 2. ADDED LOGO CONTAINER */
-    .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .logo-container img {
-      height: 40px; /* Adjust as needed */
-    }
-    .logo-container span {
-      font-size: 20px;
-      font-weight: 700;
-      color: #333;
-    }
+    .logo-container { display: flex; align-items: center; gap: 10px; }
+    .logo-container img { height: 40px; }
+    .logo-container span { font-size: 20px; font-weight: 700; color: #333; }
 
-    .center-buttons {
-      display: flex;
-      gap: 20px;
-    }
+    .center-buttons { display: flex; gap: 20px; }
 
     header button {
       background-color: transparent;
@@ -59,194 +42,91 @@
       transition: all 0.3s ease;
     }
 
-    /* 3. BRANDED BUTTONS */
-    #missingBtn {
-      border-color: #ff66c4 ;
-      color: #ff66c4 ;
-    }
-    #missingBtn.active {
-      background-color: #ff66c4 ;
-      color: white;
-    }
-    
-    #sightingsBtn {
-      border-color: #4caf50;
-      color: #4caf50;
-    }
-    #sightingsBtn.active {
-      background-color: #4caf50;
-      color: white;
-    }
+    #missingBtn { border-color: #ff66c4; color: #ff66c4; }
+    #missingBtn.active { background-color: #ff66c4; color: white; }
+
+    #sightingsBtn { border-color: #4caf50; color: #4caf50; }
+    #sightingsBtn.active { background-color: #4caf50; color: white; }
 
     .home-btn {
-      background-color: #6c757d; /* Neutral gray */
-      color: white;
-      border: none;
-      border-radius: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      background-color: #6c757d; color: white; border: none;
+      border-radius: 20px; padding: 10px 20px; font-size: 16px;
+      font-weight: 600; cursor: pointer; transition: all 0.3s ease;
     }
-    .home-btn:hover {
-      background-color: #5a6268;
-    }
+    .home-btn:hover { background-color: #5a6268; }
 
-    /* 4. NEW SEARCH/FILTER BAR */
+    /* ===== SEARCH BAR ===== */
     .search-container {
-      padding: 20px 40px;
-      background-color: #f1f1f1;
-      display: flex;
-      gap: 15px;
-      align-items: center;
+      padding: 20px 40px; background-color: #f1f1f1;
+      display: flex; gap: 15px; align-items: center;
       border-bottom: 1px solid #ddd;
     }
-    .search-container input {
-      flex-grow: 1;
-      padding: 12px 15px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+    .search-container input, .search-container select {
+      padding: 12px 15px; font-size: 16px;
+      border: 1px solid #ccc; border-radius: 8px;
     }
-    .search-container select {
-      padding: 12px 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
+    .search-container input { flex-grow: 1; }
 
-    /* Main */
-    .section {
-      display: none;
-      padding: 40px;
-      grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
-      gap: 30px;
-      justify-items: center;
+    /* ===== DOG CARDS ===== */
+    .section { display: none; padding: 40px;
+      grid-template-columns: repeat(3, 1fr); gap: 30px; justify-items: center;
     }
+    .section.active { display: grid; }
 
-    .section.active {
-      display: grid;
-    }
-    
-    /* Added style for loading/empty message */
     .section .message {
-        grid-column: 1 / -1; /* Make message span all columns */
-        font-size: 18px;
-        color: #777;
+      grid-column: 1 / -1; font-size: 18px; color: #777;
     }
 
-    /* 5. ENHANCED DOG CARDS */
     .dog-card {
-      width: 100%;
-      max-width: 350px;
-      background-color: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s ease;
-      /* Added to fix card height issues */
-      display: flex;
-      flex-direction: column;
+      width: 100%; max-width: 350px; background-color: white;
+      border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: all 0.3s ease; display: flex; flex-direction: column;
     }
-
-    .dog-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-    }
-
-    .dog-card img {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
-      /* Add border-radius to top corners */
-      border-top-left-radius: 15px;
-      border-top-right-radius: 15px;
-    }
-
-    .dog-card .info {
-      padding: 20px;
-      text-align: left;
-      /* Added to make info block fill space */
-      flex-grow: 1; 
-      display: flex;
-      flex-direction: column;
-    }
-
-    .dog-card h3 {
-      margin: 0 0 5px;
-      font-size: 20px;
-      color: #333;
-    }
-
-    
-    .dog-card p {
-      font-size: 14px;
-      color: #555;
-      margin: 4px 0;
-    }
-    .dog-card p strong {
-      color: #333;
-    }
-
-    
+    .dog-card:hover { transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+    .dog-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover;
+      border-top-left-radius: 15px; border-top-right-radius: 15px; }
+    .dog-card .info { padding: 20px; text-align: left; flex-grow: 1;
+      display: flex; flex-direction: column; }
+    .dog-card h3 { margin: 0 0 5px; font-size: 20px; color: #333; }
+    .dog-card p { font-size: 14px; color: #555; margin: 4px 0; }
     .card-btn {
-      display: block;
-      width: 100%;
-      background-color: #ff66c4 ;
-      color: white;
-      text-align: center;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      /* Pushes button to bottom */
-      margin-top: auto; 
-      padding-top: 15px;
+      display: block; width: 100%; text-align: center;
+      border: none; border-radius: 8px; padding: 12px;
+      font-size: 16px; font-weight: 600; cursor: pointer;
+      transition: background-color 0.3s ease; margin-top: auto;
     }
-    .card-btn:hover {
-      background-color: #be4a91;
-    }
-    /* Green button for sightings */
-    #sightingsSection .card-btn {
-      background-color: #4caf50;
-    }
-    #sightingsSection .card-btn:hover {
-      background-color: #43a047;
-    }
+    #missingSection .card-btn { background-color: #ff66c4; color: white; }
+    #missingSection .card-btn:hover { background-color: #be4a91; }
+    #sightingsSection .card-btn { background-color: #4caf50; color: white; }
+    #sightingsSection .card-btn:hover { background-color: #43a047; }
 
-    /* ===== RESPONSIVE DESIGN ===== */
-    @media (max-width: 900px) {
-      .section {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    /* ===== MODAL POPUP ===== */
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); justify-content: center; align-items: center;
+      z-index: 1000;
     }
-    @media (max-width: 768px) {
-      .logo-container span {
-        display: none;
-      }
-      .search-container {
-        flex-direction: column;
-        align-items: stretch;
-      }
+    .modal-content {
+      background: white; padding: 25px; border-radius: 10px;
+      max-width: 400px; width: 90%; text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
     }
-    @media (max-width: 600px) {
-      .section {
-        grid-template-columns: 1fr;
-        padding: 20px;
-      }
-      header {
-        padding: 10px 15px;
-      }
+    .modal-content img { width: 100%; border-radius: 10px; margin-bottom: 15px; }
+    .close-btn {
+      margin-top: 10px; background: #ccc; border: none; border-radius: 8px;
+      padding: 8px 14px; cursor: pointer;
     }
+    .close-btn:hover { background: #aaa; }
+
+    @media (max-width: 900px) { .section { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .section { grid-template-columns: 1fr; padding: 20px; } }
   </style>
 </head>
 <body>
 
   <header>
-    <a href="index.html" class="logo-container" style="text-decoration: none;">
+    <a href="index.html" class="logo-container" style="text-decoration:none;">
       <img src="Logo.png" alt="Snout Scout Logo"> <span></span>
     </a>
 
@@ -270,49 +150,42 @@
     </select>
   </div>
 
-  <section id="missingSection" class="section active">
-    <div class="dog-card">
-      <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGRvZ3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=600" alt="Dog 1">
-      <div class="info">
-        <h3>Loading...</h3>
-        <p><strong>Breed:</strong></p>
-        <p><strong>Size:</strong></p>
-        <p><strong>Location:</strong></p>
-        <button class="card-btn">View Details</button>
-      </div>
-    </div>
-  </section>
+  <section id="missingSection" class="section active"></section>
+  <section id="sightingsSection" class="section"></section>
 
-  <section id="sightingsSection" class="section">
-    <div class="dog-card">
-      <img src="https://images.unsplash.com/photo-1511732782465-412b656f2291?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Ym9yZGVyJTIwY29sbGllfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=600" alt="Dog 4">
-      <div class="info">
-        <h3>Loading...</h3>
-        <p><strong>Breed:</strong></p>
-        <p><strong>Size:</strong></p>
-        <p><strong>Location:</strong></p>
-        <button class="card-btn">This is my Dog!</button>
-      </div>
+  <!-- ✅ Modal Popup -->
+  <div id="detailsModal" class="modal">
+    <div class="modal-content">
+      <img id="modalImg" src="" alt="Dog image">
+      <h3 id="modalName"></h3>
+      <p id="modalBreed"></p>
+      <p id="modalSize"></p>
+      <p id="modalLocation"></p>
+      <p id="modalDate"></p>
+      <button class="close-btn" id="closeModal">Close</button>
     </div>
-  </section>
+  </div>
 
   <script>
-    // Wait for the DOM to be fully loaded before running script
     document.addEventListener("DOMContentLoaded", () => {
-
-      // ===== 1. GET ALL THE ELEMENTS WE NEED =====
       const missingBtn = document.getElementById("missingBtn");
       const sightingsBtn = document.getElementById("sightingsBtn");
       const missingSection = document.getElementById("missingSection");
       const sightingsSection = document.getElementById("sightingsSection");
-      
-      // Your server URL
+
+      const modal = document.getElementById("detailsModal");
+      const modalImg = document.getElementById("modalImg");
+      const modalName = document.getElementById("modalName");
+      const modalBreed = document.getElementById("modalBreed");
+      const modalSize = document.getElementById("modalSize");
+      const modalLocation = document.getElementById("modalLocation");
+      const modalDate = document.getElementById("modalDate");
+      const closeModal = document.getElementById("closeModal");
+
       const API_URL = "http://localhost:5500";
-      
-      // A fallback image in case one isn't provided
       const PLACEHOLDER_IMAGE = "https://via.placeholder.com/350x350.png?text=No+Image+Provided";
 
-      // ===== 2. YOUR EXISTING BUTTON TOGGLE LOGIC =====
+      // Switch between tabs
       missingBtn.addEventListener("click", () => {
         missingSection.classList.add("active");
         sightingsSection.classList.remove("active");
@@ -327,17 +200,26 @@
         missingBtn.classList.remove("active");
       });
 
-      // ===== 3. NEW: FUNCTION TO LOAD MISSING DOGS (REPORTS) =====
+      // ===== Helper: Open modal with data =====
+      function showModal(data) {
+        modalImg.src = data.dogPic || PLACEHOLDER_IMAGE;
+        modalName.textContent = data.dogName || "Unknown Dog";
+        modalBreed.textContent = `Breed: ${data.dogBreed || "Unknown"}`;
+        modalSize.textContent = `Size: ${data.dogSize || "Unknown"}`;
+        modalLocation.textContent = `Location: ${data.lastPlace || "Unknown"}`;
+        modalDate.textContent = `Date: ${data.date || "Unknown"}`;
+        modal.style.display = "flex";
+      }
+
+      closeModal.addEventListener("click", () => modal.style.display = "none");
+      window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
+
+      // ===== Load missing reports =====
       async function loadMissingDogs() {
-        // Clear the static example cards
         missingSection.innerHTML = '<p class="message">Loading missing reports...</p>';
-        
         try {
           const response = await fetch(`${API_URL}/reports`);
-          if (!response.ok) throw new Error('Network response was not ok');
           const reports = await response.json();
-
-          // Clear the "loading" message
           missingSection.innerHTML = '';
 
           if (reports.length === 0) {
@@ -345,16 +227,11 @@
             return;
           }
 
-          // Loop through each report and create a card
           reports.forEach(report => {
             const card = document.createElement('div');
             card.className = 'dog-card';
-            
-            // Format the date
-            let date = 'Date not available';
-            if (report.createdAt && report.createdAt._seconds) {
-                date = new Date(report.createdAt._seconds * 1000).toLocaleDateString();
-            }
+            const date = report.createdAt && report.createdAt._seconds ?
+              new Date(report.createdAt._seconds * 1000).toLocaleDateString() : "Unknown";
 
             card.innerHTML = `
               <img src="${report.dogPic || PLACEHOLDER_IMAGE}" alt="${report.dogName}">
@@ -365,28 +242,26 @@
                 <p><strong>Location:</strong> ${report.lastPlace || 'Unknown'}</p>
                 <p><strong>Reported:</strong> ${date}</p>
                 <button class="card-btn">View Details</button>
-              </div>
-            `;
+              </div>`;
+            card.querySelector(".card-btn").addEventListener("click", () => showModal({
+              dogPic: report.dogPic, dogName: report.dogName,
+              dogBreed: report.dogBreed, dogSize: report.dogSize,
+              lastPlace: report.lastPlace, date
+            }));
             missingSection.appendChild(card);
           });
-
-        } catch (error) {
-          console.error('Error fetching missing reports:', error);
-          missingSection.innerHTML = '<p class="message">Error loading reports. Please try again later.</p>';
+        } catch (err) {
+          console.error(err);
+          missingSection.innerHTML = '<p class="message">Error loading reports.</p>';
         }
       }
 
-      // ===== 4. NEW: FUNCTION TO LOAD FOUND DOGS (FLYERS) =====
+      // ===== Load sightings =====
       async function loadFoundDogs() {
-        // Clear the static example cards
         sightingsSection.innerHTML = '<p class="message">Loading sightings...</p>';
-        
         try {
           const response = await fetch(`${API_URL}/flyers`);
-          if (!response.ok) throw new Error('Network response was not ok');
           const flyers = await response.json();
-
-          // Clear the "loading" message
           sightingsSection.innerHTML = '';
 
           if (flyers.length === 0) {
@@ -394,17 +269,12 @@
             return;
           }
 
-          // Loop through each flyer and create a card
           flyers.forEach(flyer => {
             const card = document.createElement('div');
             card.className = 'dog-card';
-            
-            // Format the date
-            let date = 'Date not available';
-            if (flyer.createdAt && flyer.createdAt._seconds) {
-                date = new Date(flyer.createdAt._seconds * 1000).toLocaleDateString();
-            }
-            
+            const date = flyer.createdAt && flyer.createdAt._seconds ?
+              new Date(flyer.createdAt._seconds * 1000).toLocaleDateString() : "Unknown";
+
             card.innerHTML = `
               <img src="${flyer.dogPic || PLACEHOLDER_IMAGE}" alt="${flyer.dogName}">
               <div class="info">
@@ -414,21 +284,22 @@
                 <p><strong>Location:</strong> ${flyer.lastPlace || 'Unknown'}</p>
                 <p><strong>Spotted:</strong> ${date}</p>
                 <button class="card-btn">This is my Dog!</button>
-              </div>
-            `;
+              </div>`;
+            card.querySelector(".card-btn").addEventListener("click", () => showModal({
+              dogPic: flyer.dogPic, dogName: flyer.dogName,
+              dogBreed: flyer.dogBreed, dogSize: flyer.dogSize,
+              lastPlace: flyer.lastPlace, date
+            }));
             sightingsSection.appendChild(card);
           });
-
-        } catch (error) {
-          console.error('Error fetching sightings:', error);
-          sightingsSection.innerHTML = '<p class="message">Error loading sightings. Please try again later.</p>';
+        } catch (err) {
+          console.error(err);
+          sightingsSection.innerHTML = '<p class="message">Error loading sightings.</p>';
         }
       }
 
-      // ===== 5. NEW: LOAD ALL DATA WHEN THE PAGE LOADS =====
       loadMissingDogs();
       loadFoundDogs();
-
     });
   </script>
 </body>

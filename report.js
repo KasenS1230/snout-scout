@@ -44,4 +44,30 @@ app.post('/foundform', async (req, res) => {
   }
 });
 
+
+// Endpoint for flyer submission
+app.post('/reportingform', async (req, res) => {
+  try {
+    const { ownerName, dogName, dogBreed, dogColor, lastPlace, email, phoNum } = req.body;
+
+    // Add flyer to Firestore
+    const docRef = await db.collection('reports').add({
+      ownerName,
+      dogName,
+      dogBreed,
+      dogColor,
+      lastPlace,
+      email,
+      phoNum,
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    console.log('New report submitted:', { ownerName, dogName });
+    res.json({ message: 'Report submitted successfully!', id: docRef.id });
+  } catch (err) {
+    console.error('Error submitting report:', err);
+    res.status(500).json({ message: 'Failed to submit report.' });
+  }
+});
+
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

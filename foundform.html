@@ -43,7 +43,8 @@
             <div class="row g-0"> <div class="col-md-6 p-4 p-md-5">
                 <h2 class="h3 fw-bold mb-3">Report a Found Dog</h2>
                 
-                <form id="reportForm" onsubmit="window.location.href='postform.html'; return false;">
+                <form id="reportForm" onsubmit="window.location.href='postform.html'; return false;" onkeydown="return event.key != 'Enter';">
+
                   
                   <div class="mb-3">
                     <label for="bystandName" class="form-label">Your Name:</label>

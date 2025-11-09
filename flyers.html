@@ -139,7 +139,8 @@
   </header>
 
   <div class="search-container">
-    <input type="text" placeholder="Search by name, breed, color, etc...">
+    <input id="searchInput" type="text" placeholder="Search by name, breed, color, etc...">
+
   </div>
 
   <section id="missingSection" class="section active"></section>
@@ -160,139 +161,145 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const missingBtn = document.getElementById("missingBtn");
-      const sightingsBtn = document.getElementById("sightingsBtn");
-      const missingSection = document.getElementById("missingSection");
-      const sightingsSection = document.getElementById("sightingsSection");
+  const missingBtn = document.getElementById("missingBtn");
+  const sightingsBtn = document.getElementById("sightingsBtn");
+  const missingSection = document.getElementById("missingSection");
+  const sightingsSection = document.getElementById("sightingsSection");
+  const modal = document.getElementById("detailsModal");
+  const modalImg = document.getElementById("modalImg");
+  const modalName = document.getElementById("modalName");
+  const modalBreed = document.getElementById("modalBreed");
+  const modalSize = document.getElementById("modalSize");
+  const modalLocation = document.getElementById("modalLocation");
+  const modalDate = document.getElementById("modalDate");
+  const closeModal = document.getElementById("closeModal");
+  const searchInput = document.getElementById("searchInput");
 
-      const modal = document.getElementById("detailsModal");
-      const modalImg = document.getElementById("modalImg");
-      const modalName = document.getElementById("modalName");
-      const modalBreed = document.getElementById("modalBreed");
-      const modalSize = document.getElementById("modalSize");
-      const modalLocation = document.getElementById("modalLocation");
-      const modalDate = document.getElementById("modalDate");
-      const closeModal = document.getElementById("closeModal");
+  const API_URL = "http://localhost:5500";
+  const PLACEHOLDER_IMAGE = "https://via.placeholder.com/350x350.png?text=No+Image+Provided";
 
-      const API_URL = "http://localhost:5500";
-      const PLACEHOLDER_IMAGE = "https://via.placeholder.com/350x350.png?text=No+Image+Provided";
+  let allReports = [];
+  let allFlyers = [];
 
-      // Switch between tabs
-      missingBtn.addEventListener("click", () => {
-        missingSection.classList.add("active");
-        sightingsSection.classList.remove("active");
-        missingBtn.classList.add("active");
-        sightingsBtn.classList.remove("active");
-      });
+  // Tab switching
+  missingBtn.addEventListener("click", () => {
+    missingSection.classList.add("active");
+    sightingsSection.classList.remove("active");
+    missingBtn.classList.add("active");
+    sightingsBtn.classList.remove("active");
+  });
+  sightingsBtn.addEventListener("click", () => {
+    sightingsSection.classList.add("active");
+    missingSection.classList.remove("active");
+    sightingsBtn.classList.add("active");
+    missingBtn.classList.remove("active");
+  });
 
-      sightingsBtn.addEventListener("click", () => {
-        sightingsSection.classList.add("active");
-        missingSection.classList.remove("active");
-        sightingsBtn.classList.add("active");
-        missingBtn.classList.remove("active");
-      });
+  // Modal
+  function showModal(data) {
+    modalImg.src = data.dogPic || PLACEHOLDER_IMAGE;
+    modalName.textContent = data.dogName || "Unknown Dog";
+    modalBreed.textContent = `Breed: ${data.dogBreed || "Unknown"}`;
+    modalSize.textContent = `Size: ${data.dogSize || "Unknown"}`;
+    modalLocation.textContent = `Location: ${data.lastPlace || "Unknown"}`;
+    modalDate.textContent = `Date: ${data.date || "Unknown"}`;
+    modal.style.display = "flex";
+  }
+  closeModal.addEventListener("click", () => modal.style.display = "none");
+  window.addEventListener("click", e => { if(e.target === modal) modal.style.display = "none"; });
 
-      // ===== Helper: Open modal with data =====
-      function showModal(data) {
-        modalImg.src = data.dogPic || PLACEHOLDER_IMAGE;
-        modalName.textContent = data.dogName || "Unknown Dog";
-        modalBreed.textContent = `Breed: ${data.dogBreed || "Unknown"}`;
-        modalSize.textContent = `Size: ${data.dogSize || "Unknown"}`;
-        modalLocation.textContent = `Location: ${data.lastPlace || "Unknown"}`;
-        modalDate.textContent = `Date: ${data.date || "Unknown"}`;
-        modal.style.display = "flex";
-      }
+  // Render cards
+  function renderDogs(data, section, type) {
+    section.innerHTML = "";
+    if (!data || data.length === 0) {
+      section.innerHTML = '<p class="message">No entries found.</p>';
+      return;
+    }
 
-      closeModal.addEventListener("click", () => modal.style.display = "none");
-      window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
+    data.forEach(dog => {
+      const card = document.createElement("div");
+      card.className = "dog-card";
+      const date = dog.createdAt && dog.createdAt._seconds
+        ? new Date(dog.createdAt._seconds * 1000).toLocaleDateString()
+        : "Unknown";
 
-      // ===== Load missing reports =====
-      async function loadMissingDogs() {
-        missingSection.innerHTML = '<p class="message">Loading missing reports...</p>';
-        try {
-          const response = await fetch(`${API_URL}/reports`);
-          const reports = await response.json();
-          missingSection.innerHTML = '';
+      card.innerHTML = `
+        <img src="${dog.dogPic || PLACEHOLDER_IMAGE}" alt="${dog.dogName}">
+        <div class="info">
+          <h3>${dog.dogName || "Unknown Dog"}</h3>
+          <p><strong>Breed:</strong> ${dog.dogBreed || "Unknown"}</p>
+          <p><strong>Size:</strong> ${dog.dogSize || "Unknown"}</p>
+          <p><strong>Location:</strong> ${dog.lastPlace || "Unknown"}</p>
+          <p><strong>${type === "missing" ? "Reported" : "Spotted"}:</strong> ${date}</p>
+          <button class="card-btn">${type === "missing" ? "View Details" : "This is my Dog!"}</button>
+        </div>`;
 
-          if (reports.length === 0) {
-            missingSection.innerHTML = '<p class="message">No missing reports found.</p>';
-            return;
-          }
+      card.querySelector(".card-btn").addEventListener("click", () =>
+        showModal({
+          dogPic: dog.dogPic,
+          dogName: dog.dogName,
+          dogBreed: dog.dogBreed,
+          dogSize: dog.dogSize,
+          lastPlace: dog.lastPlace,
+          date
+        })
+      );
 
-          reports.forEach(report => {
-            const card = document.createElement('div');
-            card.className = 'dog-card';
-            const date = report.createdAt && report.createdAt._seconds ?
-              new Date(report.createdAt._seconds * 1000).toLocaleDateString() : "Unknown";
-
-            card.innerHTML = `
-              <img src="${report.dogPic || PLACEHOLDER_IMAGE}" alt="${report.dogName}">
-              <div class="info">
-                <h3>${report.dogName || 'Name not provided'}</h3>
-                <p><strong>Breed:</strong> ${report.dogBreed || 'Unknown'}</p>
-                <p><strong>Size:</strong> ${report.dogSize || 'Unknown'}</p>
-                <p><strong>Location:</strong> ${report.lastPlace || 'Unknown'}</p>
-                <p><strong>Reported:</strong> ${date}</p>
-                <button class="card-btn">View Details</button>
-              </div>`;
-            card.querySelector(".card-btn").addEventListener("click", () => showModal({
-              dogPic: report.dogPic, dogName: report.dogName,
-              dogBreed: report.dogBreed, dogSize: report.dogSize,
-              lastPlace: report.lastPlace, date
-            }));
-            missingSection.appendChild(card);
-          });
-        } catch (err) {
-          console.error(err);
-          missingSection.innerHTML = '<p class="message">Error loading reports.</p>';
-        }
-      }
-
-      // ===== Load sightings =====
-      async function loadFoundDogs() {
-        sightingsSection.innerHTML = '<p class="message">Loading sightings...</p>';
-        try {
-          const response = await fetch(`${API_URL}/flyers`);
-          const flyers = await response.json();
-          sightingsSection.innerHTML = '';
-
-          if (flyers.length === 0) {
-            sightingsSection.innerHTML = '<p class="message">No sightings found.</p>';
-            return;
-          }
-
-          flyers.forEach(flyer => {
-            const card = document.createElement('div');
-            card.className = 'dog-card';
-            const date = flyer.createdAt && flyer.createdAt._seconds ?
-              new Date(flyer.createdAt._seconds * 1000).toLocaleDateString() : "Unknown";
-
-            card.innerHTML = `
-              <img src="${flyer.dogPic || PLACEHOLDER_IMAGE}" alt="${flyer.dogName}">
-              <div class="info">
-                <h3>${flyer.dogName || 'Found Dog'}</h3>
-                <p><strong>Breed:</strong> ${flyer.dogBreed || 'Unknown'}</p>
-                <p><strong>Size:</strong> ${flyer.dogSize || 'Unknown'}</p>
-                <p><strong>Location:</strong> ${flyer.lastPlace || 'Unknown'}</p>
-                <p><strong>Spotted:</strong> ${date}</p>
-                <button class="card-btn">This is my Dog!</button>
-              </div>`;
-            card.querySelector(".card-btn").addEventListener("click", () => showModal({
-              dogPic: flyer.dogPic, dogName: flyer.dogName,
-              dogBreed: flyer.dogBreed, dogSize: flyer.dogSize,
-              lastPlace: flyer.lastPlace, date
-            }));
-            sightingsSection.appendChild(card);
-          });
-        } catch (err) {
-          console.error(err);
-          sightingsSection.innerHTML = '<p class="message">Error loading sightings.</p>';
-        }
-      }
-
-      loadMissingDogs();
-      loadFoundDogs();
+      section.appendChild(card);
     });
+  }
+
+  // Load data
+  async function loadMissingDogs() {
+    missingSection.innerHTML = '<p class="message">Loading missing reports...</p>';
+    try {
+      const response = await fetch(`${API_URL}/reports`);
+      allReports = await response.json();
+      renderDogs(allReports, missingSection, "missing");
+    } catch (err) {
+      console.error(err);
+      missingSection.innerHTML = '<p class="message">Error loading reports.</p>';
+    }
+  }
+
+  async function loadFoundDogs() {
+    sightingsSection.innerHTML = '<p class="message">Loading sightings...</p>';
+    try {
+      const response = await fetch(`${API_URL}/flyers`);
+      allFlyers = await response.json();
+      renderDogs(allFlyers, sightingsSection, "found");
+    } catch (err) {
+      console.error(err);
+      sightingsSection.innerHTML = '<p class="message">Error loading sightings.</p>';
+    }
+  }
+
+  // Search
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.trim().toLowerCase();
+    if (!query) {
+      renderDogs(allReports, missingSection, "missing");
+      renderDogs(allFlyers, sightingsSection, "found");
+      return;
+    }
+
+    const filterDogs = arr => arr.filter(dog => {
+      const text = [dog.dogName, dog.dogBreed, dog.dogColor, dog.dogSize, dog.lastPlace]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      return text.includes(query);
+    });
+
+    renderDogs(filterDogs(allReports), missingSection, "missing");
+    renderDogs(filterDogs(allFlyers), sightingsSection, "found");
+  });
+
+  // Initial load
+  loadMissingDogs();
+  loadFoundDogs();
+});
+
   </script>
 </body>
 </html>

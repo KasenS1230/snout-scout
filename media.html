@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snout Scout</title>
+    <!-- Load Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Apply Inter font universally and set a light background */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+            color: #1f2937;
+            /* Allow smooth scrolling for a feed effect */
+            scroll-behavior: smooth; 
+        }
+        /* Custom scrollbar styling for aesthetics (optional) */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #9ca3af;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e5e7eb;
+        }
+        /* CSS for sliding in new posts */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-slideIn {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Fixed full-screen backdrop for the modal */
+        #postModal {
+            transition: opacity 0.3s ease-in-out;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Mapped new colors: Green for primary, Pink for accent
+                        'primary-blue': '#6ec565', // New Green: 6ec565
+                        'accent-pink': '#ff66c4', // New Pink: ff66c4
+                    }
+                }
+            }
+        }
+
+        // --- Post Interaction Functions ---
+
+        // Simple script for the 'Like' button interaction
+        function toggleLike(button) {
+            const icon = button.querySelector('svg');
+            const isLiked = icon.classList.contains('text-accent-pink');
+            
+            if (isLiked) {
+                // Unlike: change to outline and remove pink color
+                icon.classList.remove('text-accent-pink', 'fill-accent-pink');
+                icon.classList.add('fill-none');
+                
+            } else {
+                // Like: change to solid and add pink color
+                icon.classList.add('text-accent-pink', 'fill-accent-pink');
+                icon.classList.remove('fill-none');
+            }
+        }
+
+        // --- Modal/Form Functions ---
+
+        function openModal() {
+            document.getElementById('postModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('postModal').classList.add('hidden');
+            document.getElementById('postForm').reset(); // Clear the form on close
+        }
+
+        // --- Post Creation Function ---
+
+        function createPostHtml(username, location, imageUrl, caption) {
+            // Simple logic to cycle profile borders/placeholders for visual variety
+            const profileText = username.charAt(0).toUpperCase();
+            const isPrimary = Math.random() > 0.5;
+            const profileColorClass = isPrimary ? 'border-primary-blue' : 'border-accent-pink';
+            const profileBg = isPrimary ? '6ec565' : 'ff66c4';
+
+            // Process caption to automatically highlight hashtags
+            const processedCaption = caption
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;')
+                .replace(/#(\w+)/g, '<span class="text-primary-blue font-medium">#$1</span>');
+
+            return `
+            <!-- Feed Post - Generated -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 animate-slideIn">
+                <!-- Header (User Profile) -->
+                <div class="flex items-center p-4">
+                    <!-- Profile Pic Placeholder -->
+                    <img src="https://placehold.co/40x40/${profileBg}/FFFFFF?text=${profileText}" 
+                         alt="@${username}" 
+                         class="w-10 h-10 rounded-full object-cover mr-3 border-2 ${profileColorClass}">
+                    <div>
+                        <p class="font-semibold text-sm">@${username}</p>
+                        <p class="text-xs text-gray-500">${location}</p>
+                    </div>
+                </div>
+
+                <!-- Image -->
+                <img src="${imageUrl}" 
+                     onerror="this.onerror=null;this.src='https://placehold.co/600x400/94A3B8/FFFFFF?text=Image+Not+Found';" 
+                     alt="User post image" 
+                     class="w-full object-cover max-h-96">
+
+                <!-- Actions and Caption -->
+                <div class="p-4">
+                    <div class="flex space-x-4 mb-3">
+                        <!-- Like Button (Note: fill-none is added for initial outline state) -->
+                        <button class="flex items-center text-gray-600 hover:text-accent-pink transition" onclick="toggleLike(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.933 0-3.694 1.25-4.332 3.033-.427 1.144-.047 2.195.967 3.208-.752-.61-1.464-1.3-2.138-2.072-1.393-1.57-.965-3.829.49-5.267C12.383 3.633 10.978 2.25 9.375 2.25c-2.485 0-4.5 2.015-4.5 4.5 0 2.298 1.05 4.35 2.7 5.85 1.758 1.637 3.5 3.067 5.092 4.144 1.353.947 2.527 1.65 3.518 1.956.88.27 1.83.27 2.71 0 .991-.306 2.165-1.009 3.518-1.956 1.592-1.077 3.334-2.507 5.092-4.144 1.65-1.5 2.7-3.552 2.7-5.85z" />
+                            </svg>
+                        </button>
+                        <button class="flex items-center text-gray-600 hover:text-primary-blue transition">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle-code">
+                                <path d="M7.9 20.3c.7-2.6 2.3-4.5 4.1-4.5s3.4 1.9 4.1 4.5"/>
+                                <path d="M21 15a2 2 0 0 0-2-2H6l-4 4V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/>
+                                <path d="m10 10-2 2 2 2"/>
+                                <path d="m14 10 2 2-2 2"/>
+                            </svg>
+                        </button>
+                        <button class="flex items-center text-gray-600 hover:text-primary-blue transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
+                                <path d="m22 2-7 20-4-9-9-4Z"/>
+                                <path d="M22 2 11 13"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Caption -->
+                    <p class="text-sm">
+                        <span class="font-bold">@${username}</span> ${processedCaption}
+                    </p>
+                </div>
+            </div>
+            `;
+        }
+
+
+        function addPost(event) {
+            event.preventDefault(); // Stop form submission
+            
+            const username = document.getElementById('postUsername').value.trim();
+            const location = document.getElementById('postLocation').value.trim() || 'Internet';
+            const imageUrl = document.getElementById('postImageUrl').value.trim();
+            const caption = document.getElementById('postCaption').value.trim();
+            const feedContainer = document.querySelector('main.space-y-8');
+
+            // Basic validation
+            if (!username || !imageUrl || !caption) {
+                // Using a simple styled message box instead of alert()
+                const messageBox = document.getElementById('messageBox');
+                messageBox.textContent = 'Error: Please fill in Username, Image URL, and Caption.';
+                messageBox.classList.remove('hidden', 'bg-primary-blue');
+                messageBox.classList.add('bg-red-500');
+                setTimeout(() => messageBox.classList.add('hidden'), 3000);
+                return;
+            }
+
+            // 1. Generate the HTML for the new post
+            const newPostHtml = createPostHtml(username, location, imageUrl, caption);
+
+            // 2. Create a temporary container and inject HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = newPostHtml.trim();
+            const newPostElement = tempDiv.firstChild;
+
+            // 3. Insert the new post at the very top of the feed (before the first child)
+            feedContainer.insertBefore(newPostElement, feedContainer.firstChild);
+
+            // 4. Close the modal and reset form
+            closeModal();
+            
+            // 5. Success message
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = `Success! Post by @${username} added to the feed.`;
+            messageBox.classList.remove('hidden', 'bg-red-500');
+            messageBox.classList.add('bg-primary-blue');
+            setTimeout(() => messageBox.classList.add('hidden'), 3000);
+        }
+
+    </script>
+</head>
+<body>
+    
+    <!-- Toast Message Box (for errors/success) -->
+    <div id="messageBox" class="hidden fixed top-20 right-4 p-3 rounded-lg text-white shadow-xl z-50 text-sm">
+        <!-- Message content here -->
+    </div>
+
+    <!-- Top Bar / Header -->
+    <header class="sticky top-0 z-10 bg-white shadow-md p-4 mb-4">
+        <div class="max-w-2xl mx-auto flex justify-between items-center">
+            <!-- Header text uses Green as primary, Pink as accent -->
+            <h1 class="text-2xl font-bold text-primary-blue">Snout<span class="text-accent-pink">Scout</span></h1>
+            
+            <div class="flex space-x-4 items-center">
+                <!-- Add Post Button -->
+                <button onclick="openModal()" class="text-lg text-primary-blue hover:opacity-80 transition p-1 rounded-full bg-primary-blue/10">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus">
+                        <path d="M5 12h14"/>
+                        <path d="M12 5v14"/>
+                    </svg>
+                </button>
+                
+                <!-- Profile Button -->
+                <button class="text-lg text-gray-500 hover:text-primary-blue transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-circle">
+                        <circle cx="12" cy="12" r="10"/>
+                        <circle cx="12" cy="10" r="3"/>
+                        <path d="M7.9 20.3c.7-2.6 2.3-4.5 4.1-4.5s3.4 1.9 4.1 4.5"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Post Modal Overlay -->
+    <div id="postModal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-40 flex justify-center items-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-xl shadow-2xl p-6 relative">
+            
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
+                    <path d="M18 6 6 18"/>
+                    <path d="m6 6 12 12"/>
+                </svg>
+            </button>
+
+            <h2 class="text-2xl font-bold mb-6 text-primary-blue border-b pb-2">New Post: Share Your Doggo!</h2>
+
+            <form id="postForm" onsubmit="addPost(event)" class="space-y-4">
+                
+                <div>
+                    <label for="postUsername" class="block text-sm font-medium text-gray-700 mb-1">Username (e.g., kdawg123)</label>
+                    <input type="text" id="postUsername" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-accent-pink focus:border-accent-pink transition" placeholder="Your Handle">
+                </div>
+                
+                <div>
+                    <label for="postLocation" class="block text-sm font-medium text-gray-700 mb-1">Location (Optional)</label>
+                    <input type="text" id="postLocation" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-accent-pink focus:border-accent-pink transition" placeholder="City, State/Country">
+                </div>
+
+                <div>
+                    <label for="postImageUrl" class="block text-sm font-medium text-gray-700 mb-1">Image URL (Use a placeholder link if needed)</label>
+                    <input type="url" id="postImageUrl" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-accent-pink focus:border-accent-pink transition" placeholder="e.g., https://placehold.co/600x400/ff66c4/FFFFFF?text=New+Dog+Post">
+                </div>
+
+                <div>
+                    <label for="postCaption" class="block text-sm font-medium text-gray-700 mb-1">Caption (Include #hashtags!)</label>
+                    <textarea id="postCaption" required rows="3" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-accent-pink focus:border-accent-pink transition" placeholder="Say something about your paw-some friend..."></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-accent-pink text-white font-bold py-3 rounded-lg hover:bg-opacity-90 transition shadow-lg shadow-accent-pink/50">
+                    Post to SnoutScout
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Main Feed Container -->
+    <main class="max-w-2xl mx-auto p-4 space-y-8">
+
+        <!-- Feed Post 1 (Green Profile, Pink Image) -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+            <!-- Header (User Profile) -->
+            <div class="flex items-center p-4">
+                <!-- Profile Pic Placeholder: Green -->
+                <img src="https://cdn.discordapp.com/attachments/1436075962835009698/1437129661162324018/IMG_5485.jpg?ex=69121ecb&is=6910cd4b&hm=67acbf3e2d02adb31e7a0554ff3aecbb6e76b1d899bd5e182b350bdbb4fee310&" alt="@kdawg123" class="w-10 h-10 rounded-full object-cover mr-3 border-2 border-primary-blue">
+                <div>
+                    <p class="font-semibold text-sm">@kdawg123</p>
+                    <p class="text-xs text-gray-500">Baton Rouge, LA</p>
+                </div>
+            </div>
+
+            <!-- Image Placeholder: Pink -->
+            <img src="https://cdn.discordapp.com/attachments/1436075962835009698/1437129120126341317/IMG_6242.jpg?ex=69121e4a&is=6910ccca&hm=62952961307e1966daea50692cf43a6f11c1e87e297ccb8ab0daf42f2d4cb428&" onerror="this.onerror=null;this.src='https://placehold.co/600x400/94A3B8/FFFFFF?text=Image+Load+Failed';" alt="Jane smiling with her Golden Retriever, Rover." class="w-full object-cover max-h-96">
+
+            <!-- Actions and Caption -->
+            <div class="p-4">
+                <div class="flex space-x-4 mb-3">
+                    <!-- Like Button (Pink Accent) -->
+                    <button class="flex items-center text-gray-600 hover:text-accent-pink transition" onclick="toggleLike(this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.933 0-3.694 1.25-4.332 3.033-.427 1.144-.047 2.195.967 3.208-.752-.61-1.464-1.3-2.138-2.072-1.393-1.57-.965-3.829.49-5.267C12.383 3.633 10.978 2.25 9.375 2.25c-2.485 0-4.5 2.015-4.5 4.5 0 2.298 1.05 4.35 2.7 5.85 1.758 1.637 3.5 3.067 5.092 4.144 1.353.947 2.527 1.65 3.518 1.956.88.27 1.83.27 2.71 0 .991-.306 2.165-1.009 3.518-1.956 1.592-1.077 3.334-2.507 5.092-4.144 1.65-1.5 2.7-3.552 2.7-5.85z" />
+                        </svg>
+                    </button>
+                    <!-- Comment Button (Green Primary) -->
+                    <button class="flex items-center text-gray-600 hover:text-primary-blue transition">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle-code">
+                            <path d="M7.9 20.3c.7-2.6 2.3-4.5 4.1-4.5s3.4 1.9 4.1 4.5"/>
+                            <path d="M21 15a2 2 0 0 0-2-2H6l-4 4V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/>
+                            <path d="m10 10-2 2 2 2"/>
+                            <path d="m14 10 2 2-2 2"/>
+                        </svg>
+                    </button>
+                    <!-- Share Button (Green Primary) -->
+                    <button class="flex items-center text-gray-600 hover:text-primary-blue transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
+                            <path d="m22 2-7 20-4-9-9-4Z"/>
+                            <path d="M22 2 11 13"/>
+                        </svg>
+                    </button>
+                </div>
+                <!-- Caption Text uses Green for hashtags -->
+                <p class="text-sm">
+                    <span class="font-bold">@kdawg123</span> The best running buddy a man could ask for! <span class="text-primary-blue font-medium">#GoldenRetrieverLife #MorningRun #DogLove</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Feed Post 2 (Pink Profile, Green Image) -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+            <!-- Header (User Profile) -->
+            <div class="flex items-center p-4">
+                <!-- Profile Pic Placeholder: Pink -->
+                <img src="https://placehold.co/40x40/ff66c4/FFFFFF?text=M" alt="@shaunn" class="w-10 h-10 rounded-full object-cover mr-3 border-2 border-accent-pink">
+                <div>
+                    <p class="font-semibold text-sm">@shaunn</p>
+                    <p class="text-xs text-gray-500">Central, LA</p>
+                </div>
+            </div>
+
+            <!-- Image Placeholder: Green -->
+            <img src="https://cdn.discordapp.com/attachments/1436075962835009698/1436988790437707837/IMG_6953.jpg?ex=69119b99&is=69104a19&hm=797375b8b63606ff4bef083baa209e52835985f0bf2884d1aa3ed223eb83a5d9&" onerror="this.onerror=null;this.src='https://placehold.co/600x400/94A3B8/FFFFFF?text=Image+Load+Failed';" alt="A chihuahua wearing a small blue sweater, posing in a garden." class="w-full object-cover max-h-96">
+
+            <!-- Actions and Caption -->
+            <div class="p-4">
+                <div class="flex space-x-4 mb-3">
+                    <button class="flex items-center text-gray-600 hover:text-accent-pink transition" onclick="toggleLike(this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.933 0-3.694 1.25-4.332 3.033-.427 1.144-.047 2.195.967 3.208-.752-.61-1.464-1.3-2.138-2.072-1.393-1.57-.965-3.829.49-5.267C12.383 3.633 10.978 2.25 9.375 2.25c-2.485 0-4.5 2.015-4.5 4.5 0 2.298 1.05 4.35 2.7 5.85 1.758 1.637 3.5 3.067 5.092 4.144 1.353.947 2.527 1.65 3.518 1.956.88.27 1.83.27 2.71 0 .991-.306 2.165-1.009 3.518-1.956 1.592-1.077 3.334-2.507 5.092-4.144 1.65-1.5 2.7-3.552 2.7-5.85z" />
+                        </svg>
+                    </button>
+                    <button class="flex items-center text-gray-600 hover:text-primary-blue transition">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle-code">
+                            <path d="M7.9 20.3c.7-2.6 2.3-4.5 4.1-4.5s3.4 1.9 4.1 4.5"/>
+                            <path d="M21 15a2 2 0 0 0-2-2H6l-4 4V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/>
+                            <path d="m10 10-2 2 2 2"/>
+                            <path d="m14 10 2 2-2 2"/>
+                        </svg>
+                    </button>
+                    <button class="flex items-center text-gray-600 hover:text-primary-blue transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
+                            <path d="m22 2-7 20-4-9-9-4Z"/>
+                            <path d="M22 2 11 13"/>
+                        </svg>
+                    </button>
+                </div>
+                <!-- Caption Text uses Green for hashtags -->
+                <p class="text-sm">
+                    <span class="font-bold">@shaunn</span> When the weather gets chilly, Willy loves to cuddle with me. Stay warm, everyone. <span class="text-primary-blue font-medium">#LabStyle #BigAndMighty #WillyTheDog</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Feed Post 3 (Gray Profile, Gray Image for contrast) -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+            <!-- Header (User Profile) -->
+            <div class="flex items-center p-4">
+                <img src="https://placehold.co/40x40/94A3B8/FFFFFF?text=T" alt="@fordexplorer" class="w-10 h-10 rounded-full object-cover mr-3 border-2 border-gray-400">
+                <div>
+                    <p class="font-semibold text-sm">@fordexplorer</p>
+                    <p class="text-xs text-gray-500">Baton Rouge, LA</p>
+                </div>
+            </div>
+
+            <!-- Image -->
+            <img src="https://cdn.discordapp.com/attachments/1436075962835009698/1437130344007471265/IMG_9154.jpg?ex=69121f6e&is=6910cdee&hm=d90c758028360f644e3877723e9dab1f69692f46dcc65aa1d0ded456eb61da95&" onerror="this.onerror=null;this.src='https://placehold.co/600x400/94A3B8/FFFFFF?text=Image+Load+Failed';" alt="A person and a Husky on a mountain trail overlooking a valley." class="w-full object-cover max-h-96">
+
+            <!-- Actions and Caption -->
+            <div class="p-4">
+                <div class="flex space-x-4 mb-3">
+                    <button class="flex items-center text-gray-600 hover:text-accent-pink transition" onclick="toggleLike(this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.933 0-3.694 1.25-4.332 3.033-.427 1.144-.047 2.195.967 3.208-.752-.61-1.464-1.3-2.138-2.072-1.393-1.57-.965-3.829.49-5.267C12.383 3.633 10.978 2.25 9.375 2.25c-2.485 0-4.5 2.015-4.5 4.5 0 2.298 1.05 4.35 2.7 5.85 1.758 1.637 3.5 3.067 5.092 4.144 1.353.947 2.527 1.65 3.518 1.956.88.27 1.83.27 2.71 0 .991-.306 2.165-1.009 3.518-1.956 1.592-1.077 3.334-2.507 5.092-4.144 1.65-1.5 2.7-3.552 2.7-5.85z" />
+                        </svg>
+                    </button>
+                    <button class="flex items-center text-gray-600 hover:text-primary-blue transition">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle-code">
+                            <path d="M7.9 20.3c.7-2.6 2.3-4.5 4.1-4.5s3.4 1.9 4.1 4.5"/>
+                            <path d="M21 15a2 2 0 0 0-2-2H6l-4 4V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/>
+                            <path d="m10 10-2 2 2 2"/>
+                            <path d="m14 10 2 2-2 2"/>
+                        </svg>
+                    </button>
+                    <button class="flex items-center text-gray-600 hover:text-primary-blue transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
+                            <path d="m22 2-7 20-4-9-9-4Z"/>
+                            <path d="M22 2 11 13"/>
+                        </svg>
+                    </button>
+                </div>
+                <!-- Caption Text uses Green for hashtags -->
+                <p class="text-sm">
+                    <span class="font-bold">@fordexplorer  Nothing beats a chill day with my best friend, Boot. Check out that cuteness! Best dog in Baton Rouge. <span class="text-primary-blue font-medium">#HikingDog #MountainViews</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="text-center py-8 text-gray-500 italic">
+            -- End of Feed --
+        </div>
+
+    </main>
+</body>
+</html>

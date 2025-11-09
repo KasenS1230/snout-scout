@@ -33,11 +33,29 @@
     .back:hover {
       background-color: #8fe99c;
     }
+
+
+.paw-icon {
+    /* Set the desired width and height */
+    width: 40px; 
+    height: 40px; 
+    /* The button will automatically resize to fit the image */
+}
+
+.back {
+    border: none;
+    background: none; /* Make the button look like just the paw */
+    padding: 0; /* Remove default padding */
+    cursor: pointer;
+}
+
+
   </style>
 </head>
 <body>
   <div class="aboutpage">
-    <button class="back" onclick="location.href='index.html'">← Back to Home</button>
+    <button class="back" onclick="location.href='index.html'">
+      <img src="https://cdn.discordapp.com/attachments/1436075962835009698/1437118489381961870/paw.png?ex=69121464&is=6910c2e4&hm=78fdf59b1a6ae7f9b416763f917babfc19431cd9b22edec4c0b7b45a5201354b&" alt="Paw Print Back Button" class="paw-icon">
+    </button>
   </div>
 </body>
-</html>

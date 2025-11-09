@@ -9,6 +9,7 @@
   },
   "name": "snout-scout",
   "version": "1.0.0",
+   "type": "module",
   "description": "GeauxHack 25-26 Hackathon Project - Project aimed to help finding missing dogs in your area!",
   "main": "report.js",
   "scripts": {

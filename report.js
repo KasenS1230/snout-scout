@@ -22,33 +22,57 @@ app.use(express.json());
 // Endpoint for flyer submission
 app.post('/foundform', async (req, res) => {
   try {
-    const { bystandName, dogName, dogBreed, dogColor, lastPlace, email, phoNum } = req.body;
+
+ 
+    console.log('=== RECEIVED DATA ===');
+    console.log('Full req.body:', req.body);
+    console.log('metroArea:', req.body.metroArea);
+    console.log('comments:', req.body.comments);
+    console.log('dogSize:', req.body.dogSize);
+    console.log('====================');
+
+    const { bystandName, dogName, dogBreed, dogColor, dogSize, cityName, metroArea, lastPlace, email, phoNum, dogPic, comments } = req.body;
+
+    console.log('After destructuring - metroArea:', metroArea);
+    console.log('After destructuring - comments:', comments);
+    console.log('After destructuring - dogSize:', dogSize);
 
     // Add flyer to Firestore
-    const docRef = await db.collection('flyers').add({
+    const cleanName = bystandName.replace(/\s+/g, '_');
+     const docId = `${cleanName}_${Date.now()}`;
+    
+    
+    await db.collection('flyers').doc(docId).set({
       bystandName,
       dogName,
       dogBreed,
       dogColor,
+      dogSize,
+      cityName,
+      metroArea,
       lastPlace,
       email,
       phoNum,
+      dogPic,
+      comments,
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
-    console.log('New flyer submitted:', { bystandName, dogName });
-    res.json({ message: 'Flyer submitted successfully!', id: docRef.id });
+    console.log('New flyer submitted:', docId );
+    console.log(cityName);
+    res.json({ message: 'Flyer submitted successfully!', id: docId });
   } catch (err) {
     console.error('Error submitting flyer:', err);
     res.status(500).json({ message: 'Failed to submit flyer.' });
   }
+
 });
 
 
 // Endpoint for flyer submission
 app.post('/reportingform', async (req, res) => {
   try {
-    const { ownerName, dogName, dogBreed, dogColor, lastPlace, email, phoNum } = req.body;
+    const { ownerName, dogName, dogBreed, dogColor, dogSize, cityName, metroArea, lastPlace, email, phoNum, dogPic, comments } = req.body;
 
     // Add flyer to Firestore
     const docRef = await db.collection('reports').add({
@@ -56,9 +80,14 @@ app.post('/reportingform', async (req, res) => {
       dogName,
       dogBreed,
       dogColor,
+      dogSize,
+      cityName,
+      metroArea,
       lastPlace,
       email,
       phoNum,
+      dogPic,
+      comments,
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     });
 

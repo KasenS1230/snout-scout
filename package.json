@@ -8,8 +8,9 @@
   "name": "snout-scout",
   "version": "1.0.0",
   "description": "GeauxHack 25-26 Hackathon Project - Project aimed to help finding missing dogs in your area!",
-  "main": "firebase.js",
+  "main": "report.js",
   "scripts": {
+    "start": "node report.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

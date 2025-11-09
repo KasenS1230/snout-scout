@@ -56,12 +56,12 @@
                   </div>
                   
                   <div class="mb-3">
-                    <label for="dogBreed" class="form-label">Breed(Optional):</label>
+                    <label for="dogBreed" class="form-label">Breed (Optional):</label>
                     <input type="text" class="form-control" id="dogBreed">
                   </div>
 
                   <div class="mb-3">
-                    <label for="dogColor" class="form-label">Color(Optional):</label>
+                    <label for="dogColor" class="form-label">Color (Optional):</label>
                     <input type="text" class="form-control" id="dogColor">
                   </div>
                   <div class="mb-3">
@@ -147,9 +147,15 @@ reportForm.addEventListener('submit', async (e) => {
         dogName: document.querySelector("#dogName").value,
         dogBreed: document.querySelector("#dogBreed").value,
         dogColor: document.querySelector("#dogColor").value,
+        dogSize: document.querySelector("#dogSize").value,
+        cityName: document.querySelector("#cityName").value,
+        metroArea: document.querySelector("#metroArea").value,
+
         lastPlace: document.querySelector("#lastPlace").value,
         email: document.querySelector("#email").value,
-        phoNum: document.querySelector("#phoNum").value
+        phoNum: document.querySelector("#phoNum").value,
+        dogPic: document.querySelector("#dogPic").value,
+        comments: document.querySelector("#comments").value
       })
     })
 

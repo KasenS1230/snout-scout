@@ -56,14 +56,14 @@
                   </div>
                   
                   <div class="mb-3">
-                    <label for="dogBreed" class="form-label">Breed(Optional):</label>
-                    <label for="dogBreed" class="form-label">Breed(Optional):</label>
+                    <label for="dogBreed" class="form-label">Breed (Optional):</label>
+                    
                     <input type="text" class="form-control" id="dogBreed">
                   </div>
 
                   <div class="mb-3">
-                    <label for="dogColor" class="form-label">Color(Optional):</label>
-                    <label for="dogColor" class="form-label">Color(Optional):</label>
+                    <label for="dogColor" class="form-label">Color (Optional):</label>
+                    
                     <input type="text" class="form-control" id="dogColor">
                   </div>
                   
@@ -74,10 +74,11 @@
                     <option value="option1">XS (Example: Chihuahua)</option>
                     <option value="option2">Small (Example: French Bulldog) </option>
                     <option value="option3">Medium (Example: Beagle) </option>
-                    <option value ="option4">Large(Example: Golden Retriever)</option>
+                    <option value ="option4">Large (Example: Golden Retriever)</option>
                     <option value ="option5">XL (Example: Great Dane)</option>
                   </select>
                 </div>
+                
                   <div class="mb-3">
                     <label for="cityName" class="form-label">City:</label>
                     <input type="text" class="form-control" id="cityName">
@@ -108,14 +109,11 @@
 
                   <div class="mb-3">
                     <label for="comments" class="form-label">Additional Comments:</label>
-                    <textarea class="form-control" id="comments" rows="3"></textarea>
+                    <textarea class="form-control" id="comments" rows="3">Ella Test Comment </textarea>
                   </div>
 
 
-                  <div class="mb-3">
-                    <label for="comments" class="form-label">Additional Comments:</label>
-                    <textarea class="form-control" id="comments" rows="3"></textarea>
-                  </div>
+                  
 
 
                   <div class="d-grid pt-3">
@@ -160,15 +158,40 @@ flyerForm.addEventListener('submit', async (e) => {
         dogName: document.querySelector("#dogName").value,
         dogBreed: document.querySelector("#dogBreed").value,
         dogColor: document.querySelector("#dogColor").value,
+        dogSize: document.querySelector("#dogSize").value,
+        cityName: document.querySelector("#cityName").value,
+        metroArea: document.querySelector("#metroArea").value,
         lastPlace: document.querySelector("#lastPlace").value,
         email: document.querySelector("#email").value,
-        phoNum: document.querySelector("#phoNum").value
+        phoNum: document.querySelector("#phoNum").value,
+        dogPic: document.querySelector("#dogPic").value,
+        comments: document.querySelector("#comments").value
       })
     })
 
     // **[Additional logic to fetch and submit data would go here]**
 
     console.log("Form submission attempted.");
+    console.log({
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        bystandName: document.querySelector("#bystandName").value,
+        dogName: document.querySelector("#dogName").value,
+        dogBreed: document.querySelector("#dogBreed").value,
+        dogColor: document.querySelector("#dogColor").value,
+        dogSize: document.querySelector("#dogSize").value,
+        cityName: document.querySelector("#cityName").value,
+        metroArea: document.querySelector("#metroArea").value,
+        lastPlace: document.querySelector("#lastPlace").value,
+        email: document.querySelector("#email").value,
+        phoNum: document.querySelector("#phoNum").value,
+        dogPic: document.querySelector("#dogPic").value,
+        comments: document.querySelector("#comments").value
+      })
+    })
 
     // Properly close the anonymous function and the addEventListener call
 }); // <-- Missing closing brace and parenthesis 

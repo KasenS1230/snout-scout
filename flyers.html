@@ -140,13 +140,12 @@
 
   <div class="search-container">
     <input id="searchInput" type="text" placeholder="Search by name, breed, color, etc...">
-
   </div>
 
   <section id="missingSection" class="section active"></section>
   <section id="sightingsSection" class="section"></section>
 
-  <!-- ✅ Modal Popup -->
+  <!--Modal Popup -->
   <div id="detailsModal" class="modal">
     <div class="modal-content">
       <img id="modalImg" src="" alt="Dog image">
@@ -158,6 +157,7 @@
       <button class="close-btn" id="closeModal">Close</button>
     </div>
   </div>
+
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -231,7 +231,7 @@
           <p><strong>Size:</strong> ${dog.dogSize || "Unknown"}</p>
           <p><strong>Location:</strong> ${dog.lastPlace || "Unknown"}</p>
           <p><strong>${type === "missing" ? "Reported" : "Spotted"}:</strong> ${date}</p>
-          <button class="card-btn">${type === "missing" ? "View Details" : "This is my Dog!"}</button>
+          <button class="card-btn">${type === "missing" ? "View Details" : "Get Details"}</button>
         </div>`;
 
       card.querySelector(".card-btn").addEventListener("click", () =>
@@ -262,7 +262,7 @@
     }
   }
 
-  async function loadFoundDogs() {
+  /*async function loadFoundDogs() {
     sightingsSection.innerHTML = '<p class="message">Loading sightings...</p>';
     try {
       const response = await fetch(`${API_URL}/flyers`);
@@ -272,7 +272,7 @@
       console.error(err);
       sightingsSection.innerHTML = '<p class="message">Error loading sightings.</p>';
     }
-  }
+  }*/
 
   // Search
   searchInput.addEventListener("input", () => {
@@ -297,7 +297,67 @@
 
   // Initial load
   loadMissingDogs();
-  loadFoundDogs();
+  //loadFoundDogs();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const sightingsSection = document.getElementById("sightingsSection");
+  const PLACEHOLDER_IMAGE = "https://via.placeholder.com/350x350.png?text=Dog+Image";
+
+  // Sample dog data
+  const sampleDog = {
+    dogName: "[No name listed]",
+    dogBreed: "Labrador",
+    dogSize: "Medium",
+    dogColor: "Black",
+    lastPlace: "Park",
+    dogPic: "https://cdn.discordapp.com/attachments/1436075962835009698/1437034242835222548/IMG_6837.jpg?ex=6911c5ee&is=6910746e&hm=04f68cb8f301a0cc35aab6e22563910cc4a96dc46e3f7a36775a9c050c748810&", 
+    createdAt: { _seconds: Math.floor(Date.now() / 1000) }
+  };
+
+  // Create dog card
+  const card = document.createElement("div");
+  card.className = "dog-card";
+  const date = new Date(sampleDog.createdAt._seconds * 1000).toLocaleDateString();
+
+  card.innerHTML = `
+    <img src="${sampleDog.dogPic || PLACEHOLDER_IMAGE}" alt="${sampleDog.dogName}">
+    <div class="info">
+      <h3>${sampleDog.dogName}</h3>
+      <p><strong>Breed:</strong> ${sampleDog.dogBreed}</p>
+      <p><strong>Size:</strong> ${sampleDog.dogSize}</p>
+      <p><strong>Location:</strong> ${sampleDog.lastPlace}</p>
+      <p><strong>Spotted:</strong> ${date}</p>
+      <button class="card-btn">Get Details</button>
+    </div>
+  `;
+
+  // Optional: modal for details
+  const modal = document.getElementById("detailsModal");
+  const modalImg = document.getElementById("modalImg");
+  const modalName = document.getElementById("modalName");
+  const modalBreed = document.getElementById("modalBreed");
+  const modalSize = document.getElementById("modalSize");
+  const modalLocation = document.getElementById("modalLocation");
+  const modalDate = document.getElementById("modalDate");
+  const closeModal = document.getElementById("closeModal");
+
+  function showModal(data) {
+    modalImg.src = data.dogPic || PLACEHOLDER_IMAGE;
+    modalName.textContent = data.dogName;
+    modalBreed.textContent = `Breed: ${data.dogBreed}`;
+    modalSize.textContent = `Size: ${data.dogSize}`;
+    modalLocation.textContent = `Location: ${data.lastPlace}`;
+    modalDate.textContent = `Date: ${date}`;
+    modal.style.display = "flex";
+  }
+
+  card.querySelector(".card-btn").addEventListener("click", () => showModal(sampleDog));
+
+  closeModal.addEventListener("click", () => modal.style.display = "none");
+  window.addEventListener("click", (e) => { if(e.target === modal) modal.style.display = "none"; });
+
+  sightingsSection.appendChild(card);
 });
 
   </script>

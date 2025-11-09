@@ -1,10 +1,8 @@
-<<<<<<< HEAD
 // report.js
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
-=======
 import firebase from 'firebase/compat/app';
 import {
   getFirestore, collection, getDocs
@@ -14,22 +12,18 @@ import express from 'express';
 import cors from 'cors';
 import admin from 'firebase-admin';
 import { readFileSync } from 'fs';
->>>>>>> origin/be-dataconnect
 
 const app = express();
 const PORT = 5500;
 
 // Firebase Admin SDK
-<<<<<<< HEAD
 const serviceAccount = require('./key.json');
 const sgMail = require('@sendgrid/mail');
 const SENDGRID_API_Key = process.env.SENDGRID_API_Key;
 console.log('Loaded API KEY:', SENDGRID_API_Key);
 sgMail.setApiKey(SENDGRID_API_Key);
-=======
 const serviceAccount = JSON.parse(readFileSync('./key.json', 'utf-8'));
 
->>>>>>> origin/be-dataconnect
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });

@@ -241,6 +241,76 @@
         padding: 10px 15px;
       }
     }
+
+      /* 5. ENHANCED DOG CARDS */
+    .dog-card {
+      width: 100%;
+      max-width: 350px;
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    .dog-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .dog-card img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+    }
+
+    .dog-card .info {
+      padding: 20px;
+      text-align: left;
+    }
+
+    .dog-card h3 {
+      margin: 0 0 5px;
+      font-size: 20px;
+      color: #333;
+    }
+
+    
+    .dog-card p {
+      font-size: 14px;
+      color: #555;
+      margin: 4px 0;
+    }
+    .dog-card p strong {
+      color: #333;
+    }
+
+    
+    .card-btn {
+      display: block;
+      width: 100%;
+      background-color: #ff66c4 ;
+      color: white;
+      text-align: center;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .card-btn:hover {
+      background-color: #be4a91;
+    }
+    
+    #sightingsSection .card-btn {
+      background-color: #4caf50;
+    }
+    #sightingsSection .card-btn:hover {
+      background-color: #43a047;
+    }
+
   </style>
 </head>
 <body>
@@ -285,15 +355,19 @@
 
   <section id="sightingsSection" class="section">
     <div class="dog-card">
-      <img src="https://images.unsplash.com/photo-1511732782465-412b656f2291?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Ym9yZGVyJTIwY29sbGllfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=600" alt="Dog 4">
+      <img src="https://cdn.discordapp.com/attachments/1436075962835009698/1437034242835222548/IMG_6837.jpg?ex=6911c5ee&is=6910746e&hm=04f68cb8f301a0cc35aab6e22563910cc4a96dc46e3f7a36775a9c050c748810&" alt="Dog 4">
       <div class="info">
-        <h3>Loading...</h3>
-        <p><strong>Breed:</strong></p>
-        <p><strong>Size:</strong></p>
-        <p><strong>Location:</strong></p>
+        <h3>[No name listed]</h3>
+        <p><strong>Breed: Lab</strong></p>
+        <p><strong>Size: Medium</strong></p>
+        <p><strong>Location: Central</strong></p>
         <button class="card-btn">This is my Dog!</button>
       </div>
     </div>
+
+ 
+
+
   </section>
 
   <script>
@@ -427,7 +501,7 @@
 
       // ===== 5. NEW: LOAD ALL DATA WHEN THE PAGE LOADS =====
       loadMissingDogs();
-      loadFoundDogs();
+      //loadFoundDogs();
 
     });
   </script>
